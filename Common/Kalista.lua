@@ -16,6 +16,9 @@ KalistaMenu.Harass:Slider("Mana", "if Mana % >", 30, 0, 80, 1)
 KalistaMenu:SubMenu("Ult", "Ult")
 KalistaMenu.Ult:Boolean("AutoR", "Save Ally with R", true)
 KalistaMenu.Ult:Slider("AutoRHP", "min Ally HP %", 5, 1, 100, 1)
+KalistaMenu.Ult:Boolean("Balista", "Balista Combo", true)
+KalistaMenu.Ult:Boolean("Skarlista", "Skarlista Combo", true)
+KalistaMenu.Ult:Boolean("Tahmlista", "Tahmlista Combo", true)
 
 KalistaMenu:SubMenu("Killsteal", "Killsteal")
 KalistaMenu.Killsteal:Boolean("Q", "Killsteal with Q", true)
@@ -101,7 +104,7 @@ OnLoop(function(myHero)
 	local target = IOW:GetTarget()
 	local QPred = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),1500,250,1150,50,true,true)
 		
-        if CanUseSpell(myHero, _Q) == READY and QPred.HitChance == 1 and GoS:ValidTarget(target, 1150) and KalistaMenu.Harass.Q:Value() and (GetCurrentMana(myHero)/GetMaxMana(myHero))*100 > HMmana.getValue() then
+        if CanUseSpell(myHero, _Q) == READY and QPred.HitChance == 1 and GoS:ValidTarget(target, 1150) and KalistaMenu.Harass.Q:Value() then
         CastSkillShot(_Q,QPred.PredPos.x,QPred.PredPos.y,QPred.PredPos.z)
         end
 		
@@ -883,24 +886,21 @@ OnLoop(function(myHero)
 	
 	for _, ally in pairs(GoS:GetAllyHeroes()) do
            if GetObjectName(ally) == "Blitzcrank" then
-	        KalistaMenu.Ult:Boolean("Balista", "Balista Combo", true)
-		for i,enemy in pairs(GetEnemyHeroes()) do
+		for i,enemy in pairs(GoS:GetEnemyHeroes()) do
   	          if GotBuff(ally, "kalistacoopstrikeally") > 0 and GoS:ValidTarget(enemy, 2450) and GetCurrentHP(enemy) > 200 and GetCurrentHP(myHero) > 400 and GoS:GetDistance(ally, enemy) > 450 and GotBuff(enemy, "rocketgrab2") > 0 then
                   CastSpell(_R)
                   end
                 end
 			
             elseif GetObjectName(ally) == "Skarner" then
-	        KalistaMenu.Ult:Boolean("Skarlista", "Skarlista Combo", true)
-	        for i,enemy in pairs(GetEnemyHeroes()) do
+	        for i,enemy in pairs(GoS:GetEnemyHeroes()) do
 		  if GotBuff(ally, "kalistacoopstrikeally") > 0 and GoS:ValidTarget(enemy, 1750) and GetCurrentHP(enemy) > 200 and GetCurrentHP(myHero) > 400 and GotBuff(enemy, "skarnerimpale") > 0 then
                   CastSpell(_R)
                   end
                 end
 			
 	    elseif GetObjectName(ally) == "TahmKench" then
-	        KalistaMenu.Ult:Boolean("Tahmlista", "Tahmlista Combo", true)
-		for i,enemy in pairs(GetEnemyHeroes()) do
+		for i,enemy in pairs(GoS:GetEnemyHeroes()) do
 	          if GotBuff(ally, "kalistacoopstrikeally") > 0 and GoS:ValidTarget(enemy, 1400) and GetCurrentHP(enemy) > 200 and GetCurrentHP(myHero) > 400 and GotBuff(enemy, "tahmkenchwdevoured") > 0 then
                   CastSpell(_R)
                   end
