@@ -1,6 +1,3 @@
-
-Ignite = (GetCastName(myHero,SUMMONER_1):lower():find("summonerdot") and SUMMONER_1 or (GetCastName(myHero,SUMMONER_2):lower():find("summonerdot") and SUMMONER_2 or nil))
-
 Azir = Menu("Azir", "Azir")
 
 Azir:SubMenu("c", "Combo")
@@ -153,7 +150,7 @@ OnLoop(function(myHero)
 		CastSkillShot(_Q,QPred.PredPos.x,QPred.PredPos.y,QPred.PredPos.z)
 		end
 				if Ignite and Azir.Misc.Autoignite:Value() then
-                  if CanUseSpell(myHero, Ignite) == READY and 20*GetLevel(myHero)+50 > GetCurrentHP(enemy)+GetHPRegen(enemy)*2.5 and GoS:GetDistanceSqr(GetOrigin(enemy)) < 600*600 then
+                  if CanUseSpell(myHero, Ignite) == READY and 20*GetLevel(myHero)+50 > GetCurrentHP(enemy)+GetHPRegen(enemy)*2.5 and GoS:ValidTarget(enemy, 900) then
                   CastTargetSpell(enemy, Ignite)
                   end
                 end
@@ -240,6 +237,3 @@ addInterrupterCallback(function(target, spellType)
   CastSkillShot(_R,RPred.PredPos.x,RPred.PredPos.y,RPred.PredPos.z)
   end
 end)
-
-
-PrintChat("Azir by Deftsu loaded.")
