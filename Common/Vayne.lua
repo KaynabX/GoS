@@ -77,7 +77,7 @@ OnLoop(function(myHero)
         CastTargetSpell(target, GetItemSlot(myHero,3153))
         end
 
-        if GetItemSlot(myHero,3144) > 0 andt VayneMenu.Combo.Items:Value() and GoS:ValidTarget(target, 550) and 100*GetCurrentHP(myHero)/GetMaxHP(myHero) < 50 and 100*GetCurrentHP(target)/GetMaxHP(target) > 20 then
+        if GetItemSlot(myHero,3144) > 0 and VayneMenu.Combo.Items:Value() and GoS:ValidTarget(target, 550) and 100*GetCurrentHP(myHero)/GetMaxHP(myHero) < 50 and 100*GetCurrentHP(target)/GetMaxHP(target) > 20 then
         CastTargetSpell(target, GetItemSlot(myHero,3144))
         end
 
@@ -164,15 +164,16 @@ OnProcessSpell(function(unit, spell)
                                 CastSkillShot(_Q,GoS:GenerateMovePos().x, GoS:GenerateMovePos().y, GoS:GenerateMovePos().z)
                                 end
                         end
-                end, spell.windUpTime*1000)
-	end			
-      end
-      if spell.name:lower():find("vaynetumble") then 
+                end, spell.windUpTime*1000 + GetLatency())
+	end		
+	
+        if spell.name:lower():find("vaynetumble") then 
 	        GoS:DelayAction(function() 
                         if IOW:Mode() == "Combo" and VayneMenu.Combo.Q:Value() then
                         AttackUnit(target)
                         end
-                 end, spell.animationTime*1000)
+                 end, spell.animationTime*1000 + GetLatency())
+        end
       end
   end
 end)
