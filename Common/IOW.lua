@@ -1,4 +1,4 @@
-local IOWversion = 1.8
+local IOWversion = 1.9
 
 class "InspiredsOrbWalker"
 
@@ -9,10 +9,11 @@ function InspiredsOrbWalker:__init()
   self.movementEnabled = true
   self.altAttacks = Set { "caitlynheadshotmissile", "frostarrow", "garenslash2", "kennenmegaproc", "lucianpassiveattack", "masteryidoublestrike", "quinnwenhanced", "renektonexecute", "renektonsuperexecute", "rengarnewpassivebuffdash", "trundleq", "xenzhaothrust", "xenzhaothrust2", "xenzhaothrust3" }
   self.resetAttacks = Set { "dariusnoxiantacticsonh", "fioraflurry", "garenq", "hecarimrapidslash", "jaxempowertwo", "jaycehypercharge", "leonashieldofdaybreak", "luciane", "lucianq", "monkeykingdoubleattack", "mordekaisermaceofspades", "nasusq", "nautiluspiercinggaze", "netherblade", "parley", "poppydevastatingblow", "powerfist", "renektonpreexecute", "rengarq", "shyvanadoubleattack", "sivirw", "takedown", "talonnoxiandiplomacy", "trundletrollsmash", "vaynetumble", "vie", "volibearq", "xenzhaocombotarget", "yorickspectral", "reksaiq", "riventricleave", "itemtitanichydracleave", "itemtiamatcleave" }
-  self.rangeCircle = GoS:Circle(GoS.White).Attach(myHero, GetRange(myHero)+GetHitBox(myHero))
+  self.rangeCircle = GoS:Circle(GoS.White)
   self:MakeMenu()
   OnLoop(function() self:Loop() end)
   OnProcessSpell(function(x,y) self:ProcessSpell(x,y) end)
+  OnProcessWaypoint(function(x,y) self:ProcessWaypoint(x,y) end)
   return self
 end
 
@@ -41,6 +42,7 @@ function InspiredsOrbWalker:MakeMenu()
     if GetRange(myHero) < 450 then
       self.Config:Boolean("sticky", "Stick to Target", true)
     end
+    self.rangeCircle.Attach(myHero, GetRange(myHero)+GetHitBox(myHero))
     self.Config:Boolean("drawcircle", "Autoattack Circle", true)
     self.Config:Info("space", "")
     self.Config:Info("version", "Version: v"..IOWversion)
@@ -203,7 +205,7 @@ function InspiredsOrbWalker:TimeToMove()
 end
 
 function InspiredsOrbWalker:TimeToAttack()
-  return self.lastAttack + 1000/self:GetAttackSpeed() < GetTickCount() - GetLatency()
+  return self.lastAttack + 1000/self:GetFullAttackSpeed() < GetTickCount() - GetLatency()
 end
 
 function InspiredsOrbWalker:DoAttack()
@@ -214,15 +216,21 @@ function InspiredsOrbWalker:DoWalk()
   return (self.Config.h.Combo:Value() or self.Config.h.Harass:Value() or self.Config.h.LaneClear:Value() or self.Config.h.LastHit:Value()) and self.movementEnabled
 end
 
-function InspiredsOrbWalker:GetAttackSpeed()
+function InspiredsOrbWalker:GetFullAttackSpeed()
   return GetAttackSpeed(myHero)*GetBaseAttackSpeed(myHero)
 end
 
 function InspiredsOrbWalker:ProcessSpell(unit, spell)
   if unit and unit == myHero and spell and spell.name then
-    if self.resetAttacks[spell.name] then
-      self.lastAttack = 0
+    if self.resetAttacks[spell.name:lower()] then
+      self.lastAttack = GetTickCount() + spell.windUpTime * 1000 - GetLatency()/2 - 1000/self:GetFullAttackSpeed()
     end
+  end
+end
+
+function InspiredsOrbWalker:ProcessWaypoint(Object,way)
+  if Object == myHero and not self:TimeToMove() and way.index > 2 then
+    self.lastAttack = 0
   end
 end
 
