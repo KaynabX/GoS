@@ -111,7 +111,7 @@ function Combo()
 				if SpellRREADY and GoS:ValidTarget(target, 700) and  RPred.HitChance == 1 and ViktorMenu.Combo.R:Value() and damage > GetCurrentHP(target) then
 				CastSkillShot(_R,RPred.PredPos.x,RPred.PredPos.y,RPred.PredPos.z)
                 elseif GetCastName(myHero, _R) == "viktorchaosstormguide" and GoS:ValidTarget(target, 1000) then
-                CastSkillShot(_R, targetpos.x,targetpos.y, targetpos.z)
+                CastSkillShot(_R, targetpos.x, targetpos.y, targetpos.z)
                 end
 				
 	end
