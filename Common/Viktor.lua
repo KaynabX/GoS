@@ -24,11 +24,6 @@ ViktorMenu.Misc:Boolean("Autolvl", "Auto level", true)
 ViktorMenu.Misc:Boolean("InterruptE", "Interrupt Spells (E)", true)
 ViktorMenu.Misc:Boolean("InterruptR", "Interrupt Spells (R)", false)
 
-ViktorMenu:SubMenu("JungleClear", "JungleClear")
-ViktorMenu.JungleClear:Boolean("Q", "Use Q", true)
-ViktorMenu.JungleClear:Boolean("W", "Use W", true)
-ViktorMenu.JungleClear:Boolean("E", "Use E", true)
-
 ViktorMenu:SubMenu("Drawings", "Drawings")
 ViktorMenu.Drawings:Boolean("Q", "Draw Q Range", true)
 ViktorMenu.Drawings:Boolean("W", "Draw W Range", true)
@@ -73,11 +68,10 @@ Tick = Tick + 1
 Checks()
 Drawings()
 
-if Tick > 20 then
+if Tick > 32 then
 Combo()
 Harass()
 Killsteal()
-JungleClear()
 Autolvl()
 Tick = 0
 end
@@ -88,30 +82,30 @@ function Combo()
     if IOW:Mode() == "Combo" then
 	
                 local target = GetCurrentTarget()
-				local targetPos = GetOrigin(target)     
-	            local WPred = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),math.huge,500,700,300,false,true)
-				local EPred = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),1200,0,1225,80,false,true)
-			    local StartPos = Vector(myHero) - 525 * (Vector(myHero) - Vector(target)):normalized()
+		local targetPos = GetOrigin(target)     
+	        local WPred = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),math.huge,500,700,300,false,true)
+	        local EPred = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),1200,0,1225,80,false,true)
+		local StartPos = Vector(myHero) - 525 * (Vector(myHero) - Vector(target)):normalized()
                 local RPred = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),math.huge,250,700,450,false,true)     
                 local damage = GoS:CalcDamage(myHero, target, 0, 25 + 200*GetCastLevel(myHero,_R) + 1.25*GetBonusAP(myHero))				
 										
-				if SpellEREADY and GoS:ValidTarget(target, 1225) and EPred.HitChance == 1 and ViktorMenu.Combo.E:Value() then
-				CastSkillShot3(_E,StartPos,EPred.PredPos)
-				end
+		if SpellEREADY and GoS:ValidTarget(target, 1225) and EPred.HitChance == 1 and ViktorMenu.Combo.E:Value() then
+                CastSkillShot3(_E,StartPos,EPred.PredPos)
+		end
 					
-				if SpellQREADY and GoS:ValidTarget(target, GetCastRange(myHero,_Q)) and ViktorMenu.Combo.Q:Value() then
-				CastTargetSpell(target, _Q)
-				AttackUnit(target)
-				end
-					 
-				if SpellWREADY and GoS:ValidTarget(target, 700) and WPred.HitChance == 1 and ViktorMenu.Combo.W:Value() and 100*GetCurrentHP(target)/GetMaxHP(myHero) < 70 then
-				CastSkillShot(_W,WPred.PredPos.x,WPred.PredPos.y,WPred.PredPos.z)
-				end
+		if SpellQREADY and GoS:ValidTarget(target, GetCastRange(myHero,_Q)) and ViktorMenu.Combo.Q:Value() then
+	        CastTargetSpell(target, _Q)
+		AttackUnit(target)
+		end
+				 
+		if SpellWREADY and GoS:ValidTarget(target, 700) and WPred.HitChance == 1 and ViktorMenu.Combo.W:Value() and 100*GetCurrentHP(target)/GetMaxHP(myHero) < 70 then
+		CastSkillShot(_W,WPred.PredPos.x,WPred.PredPos.y,WPred.PredPos.z)
+		end
 					        
-				if SpellRREADY and GoS:ValidTarget(target, 700) and  RPred.HitChance == 1 and ViktorMenu.Combo.R:Value() and damage > GetCurrentHP(target) then
-				CastSkillShot(_R,RPred.PredPos.x,RPred.PredPos.y,RPred.PredPos.z)
+		if SpellRREADY and GoS:ValidTarget(target, 700) and RPred.HitChance == 1 and ViktorMenu.Combo.R:Value() and damage > GetCurrentHP(target) then
+		CastSkillShot(_R,RPred.PredPos.x,RPred.PredPos.y,RPred.PredPos.z)
                 elseif GetCastName(myHero, _R) == "viktorchaosstormguide" and GoS:ValidTarget(target, 1000) then
-                CastSkillShot(_R, targetpos.x, targetpos.y, targetpos.z)
+                CastSkillShot(_R, targetPos.x,targetPos.y, targetPos.z)
                 end
 				
 	end
@@ -120,26 +114,26 @@ end
 function Harass()
     if IOW:Mode() == "Harass" and 100*GetCurrentMana(myHero)/GetMaxMana(myHero) >= ViktorMenu.Harass.Mana:Value() then
 	            
-				local target = GetCurrentTarget()
-				local targetPos = GetOrigin(target)
-				local WPred = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),math.huge,500,700,300,false,true)
-				local EPred = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),1200,0,1225,80,false,true)
+		local target = GetCurrentTarget()
+		local targetPos = GetOrigin(target)
+		local WPred = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),math.huge,500,700,300,false,true)
+		local EPred = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),1200,0,1225,80,false,true)
                 local StartPos = Vector(myHero) - 525 * (Vector(myHero) - Vector(target)):normalized()
 					                 
-				if SpellEREADY and EPred.HitChance == 1 and ViktorMenu.Harass.E:Value() then
-				CastSkillShot3(_E,StartPos,EPred.PredPos)
-				end
+		if SpellEREADY and EPred.HitChance == 1 and ViktorMenu.Harass.E:Value() then
+		CastSkillShot3(_E,StartPos,EPred.PredPos)
+		end
 					
-				if SpellQREADY and ViktorMenu.Harass.Q:Value() then
-				CastTargetSpell(target, _Q)
-				end
+		if SpellQREADY and ViktorMenu.Harass.Q:Value() then
+		CastTargetSpell(target, _Q)
+		end
 					  
-				if SpellWREADY and WPred.HitChance == 1 and ViktorMenu.Harass.W:Value() and 100*GetCurrentHP(target)/GetMaxHP(myHero) < 70 then
-				CastSkillShot(_W,WPred.PredPos.x,WPred.PredPos.y,WPred.PredPos.z)
-				end
+		if SpellWREADY and WPred.HitChance == 1 and ViktorMenu.Harass.W:Value() and 100*GetCurrentHP(target)/GetMaxHP(myHero) < 70 then
+		CastSkillShot(_W,WPred.PredPos.x,WPred.PredPos.y,WPred.PredPos.z)
+		end
 					 
-				if GetCastName(myHero, _R) == "viktorchaosstormguide" and GoS:ValidTarget(target, 1000) then
-                CastSkillShot(_R, targetpos.x,targetpos.y, targetpos.z)
+		if GetCastName(myHero, _R) == "viktorchaosstormguide" and GoS:ValidTarget(target, 1000) then
+                CastSkillShot(_R, targetPos.x,targetPos.y, targetPos.z)
                 end
 				
 	end
@@ -151,43 +145,18 @@ function Killsteal()
         local RPred = GetPredictionForPlayer(GoS:myHeroPos(),enemy,GetMoveSpeed(enemy),math.huge,250,700,450,false,true)
         local StartPos = Vector(GoS:myHeroPos()) - 525 * (Vector(GoS:myHeroPos()) - Vector(enemyPos)):normalized()
 		
-		if Ignite and ViktorMenu.Misc.AutoIgnite:Value() then
+	if Ignite and ViktorMenu.Misc.AutoIgnite:Value() then
           if SpellIREADY and 20*GetLevel(myHero)+50 > GetCurrentHP(enemy)+GetHPRegen(enemy)*2.5 and GoS:GetDistanceSqr(GetOrigin(enemy)) < 600*600 then
           CastTargetSpell(enemy, Ignite)
           end
         end
 				
-		if SpellQREADY and GoS:ValidTarget(enemy, GetCastRange(myHero,_Q)) and ViktorMenu.Killsteal.Q:Value() and GetCurrentHP(enemy)+GetMagicShield(enemy)+GetDmgShield(enemy) < GoS:CalcDamage(myHero, enemy, 0, 20*GetCastLevel(myHero,_Q) + 20 + 0.2*GetBonusAP(myHero)) then
+	if SpellQREADY and GoS:ValidTarget(enemy, GetCastRange(myHero,_Q)) and ViktorMenu.Killsteal.Q:Value() and GetCurrentHP(enemy)+GetMagicShield(enemy)+GetDmgShield(enemy) < GoS:CalcDamage(myHero, enemy, 0, 20*GetCastLevel(myHero,_Q) + 20 + 0.2*GetBonusAP(myHero)) then
         CastTargetSpell(enemy, _Q)
-		elseif SpellEREADY and EPred.HitChance == 1 and GoS:ValidTarget(enemy,1225) and ViktorMenu.Killsteal.E:Value() and GetCurrentHP(enemy)+GetMagicShield(enemy)+GetDmgShield(enemy) < GoS:CalcDamage(myHero, enemy, 0, 45*GetCastLevel(myHero,_E) + 25 + 0.7*GetBonusAP(myHero)) then
-		CastSkillShot3(_E,StartPos,EPred.PredPos)
-		elseif SpellRREADY and RPred.HitChance == 1 and GoS:ValidTarget(enemy, GetCastRange(myHero, _R)) and ViktorMenu.Killsteal.R:Value() and GetCurrentHP(enemy)+GetMagicShield(enemy)+GetDmgShield(enemy) < GoS:CalcDamage(myHero, enemy, 0, 100*GetCastLevel(myHero,_R) + 50 + 0.55*GetBonusAP(myHero)) then  
+	elseif SpellRREADY and RPred.HitChance == 1 and GoS:ValidTarget(enemy, GetCastRange(myHero, _R)) and ViktorMenu.Killsteal.R:Value() and GetCurrentHP(enemy)+GetMagicShield(enemy)+GetDmgShield(enemy) < GoS:CalcDamage(myHero, enemy, 0, 100*GetCastLevel(myHero,_R) + 50 + 0.55*GetBonusAP(myHero)) then  
         CastSkillShot(_R,RPred.PredPos.x,RPred.PredPos.y,RPred.PredPos.z)    
-		end
-		
-	end
-end
-
-function JungleClear()
-    for _,mob in pairs(GoS:GetAllMinions(MINION_JUNGLE)) do
-		
-        if IOW:Mode() == "LaneClear" then
-		local mobPos = GetOrigin(mob)
-		
-		if SpellQREADY and ViktorMenu.JungleClear.Q:Value() and GoS:ValidTarget(mob, GetCastRange(myHero,_Q)) then
-		CastTargetSpell(mob, _Q)
-		AttackUnit(mob)
-		end
-		
-		if SpellWREADY and ViktorMenu.JungleClear.W:Value() and GoS:ValidTarget(mob, 700) then
-		CastSkillShot(_W, mobPos.x, mobPos.y, mobPos.z)
-		end
-		
-	    if SpellEREADY and ViktorMenu.JungleClear.E:Value() and GoS:ValidTarget(mob, 1225) then
-		CastSkillShot3(_E,StartPos, mobPos)
-		end
-		
         end
+		
     end
 end
 
