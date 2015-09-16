@@ -23,11 +23,6 @@ XerathMenu.Misc:Boolean("Interrupt", "Interrupt Spells (E)", true)
 XerathMenu.Misc:Boolean("AutoR", "Auto R Killable", true)
 XerathMenu.Misc:Key("AutoRKey", "R Killable(hold)", string.byte("T"))
 
-XerathMenu:SubMenu("JungleClear", "JungleClear")
-XerathMenu.JungleClear:Boolean("Q", "Use Q", true)
-XerathMenu.JungleClear:Boolean("W", "Use W", true)
-XerathMenu.JungleClear:Boolean("E", "Use E", false)
-
 XerathMenu:SubMenu("Drawings", "Drawings")
 XerathMenu.Drawings:Boolean("Qmin", "Draw Q Min Range", true)
 XerathMenu.Drawings:Boolean("Qmax", "Draw Q Max Range", true)
@@ -77,15 +72,15 @@ OnLoop(function(myHero)
 Tick = Tick + 1
 Checks()
 Drawings()
+AutoRkey()
 
 if Tick > 32 then
 Combo()
 Harass()
 Killsteal()
-JungleClear()
 Autolvl()
 AutoR()
-AutoRKey()
+
 Tick = 0
 end
 
@@ -118,15 +113,14 @@ function Combo()
                 CastSkillShot2(_Q, QPred.PredPos.x, QPred.PredPos.y, QPred.PredPos.z)
               end
           end, i)
-      end
-    end	
-                    
+      end	
+    end        
     end
 end
 
 function Harass()
 
-    if IOW:Mode() == "Harass"100*GetCurrentMana(myHero)/GetMaxMana(myHero) >= XerathMenu.Harass.Mana:Value() then
+    if IOW:Mode() == "Harass" and 100*GetCurrentMana(myHero)/GetMaxMana(myHero) >= XerathMenu.Harass.Mana:Value() then
     
 	local target = GetCurrentTarget()
 	local myHeroPos = GoS:myHeroPos()
@@ -156,36 +150,6 @@ function Harass()
     end	
 	
     end
-end
-
-function JungleClear()
-for _,mob in pairs(GoS:GetAllMinions(MINION_JUNGLE)) do
-		
-        if IOW:Mode() == "LaneClear" then
-		local mobPos = GetOrigin(mob)
-		local _Qrange = 750 + math.min(700, i/2)
-		
-		if SpellQREADY and XerathMenu.JungleClear.Q:Value() and GoS:ValidTarget(mob, 1500) then
-		CastSkillShot(_Q, myHeroPos.x, myHeroPos.y, myHeroPos.z)
-      ,           for i=250, 1500, 250 do
-                  GoS:DelayAction(function()
-                    if QPred.HitChance == 1 then
-                    CastSkillShot2(_Q, mobPos.x, mobPos.y, mobPos.z)
-                    end
-                  end, i)
-		  end
-                end
-		
-		if SpellWREADY and XerathMenu.JungleClear.W:Value() and GoS:ValidTarget(mob, GetCastRange(myHero, _W)) then
-		CastSpell(_W)
-		end
-		
-	        if SpellEREADY and XerathMenu.JungleClear.E:Value() and GoS:ValidTarget(mob, GetCastRange(myHero, _E)) then
-		CastSkillShot(_E,mobPos.x, mobPos.y, mobPos.z)
-		end
-		
-        end
-end
 end
 
 function Autolvl()     
