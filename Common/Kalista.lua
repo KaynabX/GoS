@@ -140,9 +140,9 @@ OnLoop(function(myHero)
 	    for _, ally in pairs(GoS:GetAllyHeroes()) do
                 for i,enemy in pairs(GoS:GetEnemyHeroes()) do 
 			local soulboundhero = GotBuff(ally, "kalistacoopstrikeally") > 0
-			if CanUseSpell(myHero,_R) == READY and soulboundhero and 100*GetCurrentHP(ally)/GetMaxHP(ally) <= KalistaMenu.Ult.AutoRHP:Value() and GoS:GetDistance(ally, enemy) <= 600 then
+			if CanUseSpell(myHero,_R) == READY and soulboundhero and 100*GetCurrentHP(ally)/GetMaxHP(ally) <= KalistaMenu.Ult.AutoRHP:Value() and GoS:ValidTarget(ally, 1450) and GoS:GetDistance(ally, enemy) <= 600 then
+                        CastSpell(_R)
 		        PrintChat("Rescuing low health "..GetObjectName(ally).."")
-			CastSpell(_R)
 			end
 		end
 	    end
@@ -891,15 +891,17 @@ OnLoop(function(myHero)
                   CastSpell(_R)
                   end
                 end
-			
-            elseif GetObjectName(ally) == "Skarner" then
+	    end
+	
+            if GetObjectName(ally) == "Skarner" then
 	        for i,enemy in pairs(GoS:GetEnemyHeroes()) do
 		  if GotBuff(ally, "kalistacoopstrikeally") > 0 and GoS:ValidTarget(enemy, 1750) and GetCurrentHP(enemy) > 200 and GetCurrentHP(myHero) > 400 and GotBuff(enemy, "skarnerimpale") > 0 then
                   CastSpell(_R)
                   end
                 end
+            end
 			
-	    elseif GetObjectName(ally) == "TahmKench" then
+	    if GetObjectName(ally) == "TahmKench" then
 		for i,enemy in pairs(GoS:GetEnemyHeroes()) do
 	          if GotBuff(ally, "kalistacoopstrikeally") > 0 and GoS:ValidTarget(enemy, 1400) and GetCurrentHP(enemy) > 200 and GetCurrentHP(myHero) > 400 and GotBuff(enemy, "tahmkenchwdevoured") > 0 then
                   CastSpell(_R)
