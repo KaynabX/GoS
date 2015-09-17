@@ -1,3 +1,5 @@
+if GetObjectName(myHero) ~= "Thresh" then return end
+
 ThreshMenu = Menu("Thresh", "Thresh")
 ThreshMenu:SubMenu("Combo", "Combo")
 ThreshMenu.Combo:Boolean("Q", "Use Q", true)
