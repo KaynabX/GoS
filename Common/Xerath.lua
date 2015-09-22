@@ -72,8 +72,6 @@ OnLoop(function(myHero)
 	
     local target = GetCurrentTarget()
     local myHeroPos = GoS:myHeroPos()	
-    local _Qrange = 750 + math.min(700, i/2)
-    local QPred = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),math.huge,600,_Qrange,100,false,true)
     local WPred = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),math.huge,700,GetCastRange(myHero,_W),125,false,true)
     local EPred = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),1400,250,GetCastRange(myHero,_E),60,true,true)
 	
@@ -90,6 +88,8 @@ OnLoop(function(myHero)
       CastSkillShot(_Q, myHeroPos.x, myHeroPos.y, myHeroPos.z)
       for i=250, 1500, 250 do
         GoS:DelayAction(function()
+              local _Qrange = 750 + math.min(700, i/2)
+              local QPred = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),math.huge,600,_Qrange,100,false,true)
               if QPred.HitChance == 1 then
                 CastSkillShot2(_Q, QPred.PredPos.x, QPred.PredPos.y, QPred.PredPos.z)
               end
@@ -102,8 +102,6 @@ OnLoop(function(myHero)
     
 	local target = GetCurrentTarget()
 	local myHeroPos = GoS:myHeroPos()
-	local _Qrange = 700 + math.min(700, i/2)
-        local QPred = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),math.huge,600,_Qrange,100,false,true)
 	local WPred = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),math.huge,700,GetCastRange(myHero,_W),125,false,true)
 	local EPred = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),1400,250,GetCastRange(myHero,_E),60,true,true)
 	
@@ -111,6 +109,8 @@ OnLoop(function(myHero)
       CastSkillShot(_Q, myHeroPos.x, myHeroPos.y, myHeroPos.z)
       for i=250, 1500, 250 do
         GoS:DelayAction(function()
+              local _Qrange = 700 + math.min(700, i/2)
+              local QPred = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),math.huge,600,_Qrange,100,false,true)
               if QPred.HitChance == 1 then
                 CastSkillShot2(_Q, QPred.PredPos.x, QPred.PredPos.y, QPred.PredPos.z)
               end
@@ -219,7 +219,6 @@ if XerathMenu.Drawings.R:Value() then DrawCircle(GoS:myHeroPos().x, GoS:myHeroPo
 	CastSkillShot(_R,RPred.PredPos.x,RPred.PredPos.y,RPred.PredPos.z) 
 	GoS:DelayAction(function() CastSkillShot(_R,RPred.PredPos.x,RPred.PredPos.y,RPred.PredPos.z)end, 700)
 	GoS:DelayAction(function() CastSkillShot(_R,RPred.PredPos.x,RPred.PredPos.y,RPred.PredPos.z)end, 700)
-	end
     elseif SpellRREADY and RPred.HitChance == 1 and GoS:ValidTarget(target, 800 + 1050*GetCastLevel(myHero,_R)) and XerathMenu.Misc.AutoRKey:Value() and GetCurrentHP(target)+GetMagicShield(enemy)+GetDmgShield(enemy) < GoS:CalcDamage(myHero, target, 0, 405+165*GetCastLevel(myHero, _R)+1.29*GetBonusAP(myHero) + ExtraDmg) then
 	CastSkillShot(_R,RPred.PredPos.x,RPred.PredPos.y,RPred.PredPos.z) 
 	GoS:DelayAction(function() CastSkillShot(_R,RPred.PredPos.x,RPred.PredPos.y,RPred.PredPos.z)end, 700)
@@ -254,7 +253,7 @@ end
 
 addInterrupterCallback(function(target, spellType)
   local EPred = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),1400,250,GetCastRange(myHero,_E),60,true,true)
-  if GoS:IsInDistance(target, GetCastRange(myHero,_E)) and SpellEREADY and EPred.HitChance == 1 and Xerath.Misc.Interrupt:Value() and spellType == CHANELLING_SPELLS then
+  if GoS:IsInDistance(target, GetCastRange(myHero,_E)) and SpellEREADY and EPred.HitChance == 1 and XerathMenu.Misc.Interrupt:Value() and spellType == CHANELLING_SPELLS then
   CastSkillShot(_E,EPred.PredPos.x,EPred.PredPos.y,EPred.PredPos.z)
   end
 end)

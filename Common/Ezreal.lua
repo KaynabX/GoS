@@ -1,5 +1,3 @@
-if GetObjectName(myHero) ~= "Ezreal" then return end
-
 require('Inspired')
 
 PrintChat("ADC MAIN | Ezreal loaded.")
