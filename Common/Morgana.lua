@@ -1,25 +1,14 @@
-if GetObjectName(myHero) ~= "Morgana" then return end
 -- Morgana script --
--- Change log is on my topic, type suggestions and comments in the topic. (Version 1.1) --
-
--- Script info --
-
-local info = "Rakli's Morgana v1.1"
-local thread = "Type suggestions in my topic :)"
-local bugs = "If you find any bugs, make sure to report them on topic"
-textTable = {info,thread,bugs}
-PrintChat(textTable[1])
-PrintChat(textTable[2])
-PrintChat(textTable[3])
+-- Change log is on my topic, type suggestions and comments in the topic. (Version 1.2) --
 
 -- Menu --
  
-MorganaMenu = Menu("Morgana", "Morgana")
+MorganaMenu = Menu("DatMorgana", "DatMorgana")
 MorganaMenu:SubMenu("Combo", "Combo")
 MorganaMenu.Combo:Boolean("Q", "Use Q", true)
 MorganaMenu.Combo:Boolean("W", "Use W", false)
 MorganaMenu.Combo:Boolean("WQ", "W with Q only", true)
-MorganaMenu.Combo:Boolean("E", "Use E on Self", true)
+MorganaMenu.Combo:Boolean("E", "Use E on Self", false)
 MorganaMenu.Combo:Boolean("Shield", "Use E on Ally", true)
 MorganaMenu.Combo:Boolean("R", "Use R", true)
 MorganaMenu.Combo:Boolean("TwoR", "Use R on 2+", false)
@@ -59,20 +48,54 @@ MorganaMenu.Drawings:Boolean("Q", "Draw Q Range", true)
 MorganaMenu.Drawings:Boolean("E", "Draw E Range", false)
 MorganaMenu.Drawings:Boolean("R", "Draw R Range", false)
 
+local info = "DatMorgana v1.2 Loaded"
+local author = "By Rakli"
+local thread = "Type suggestions in my topic :)"
+local bugs = "If you find any bugs, make sure to report them on topic"
+textTable = {info,author,thread,bugs}
+PrintChat(textTable[1])
+PrintChat(textTable[2])
+PrintChat(textTable[3])
+PrintChat(textTable[4])
+
 OnLoop(function(myHero)
+local myHero = GetMyHero()
 
-	-- Locals --
+Range()
+Combo()
+Harass()
+Enemyheroes()
+LaneClear()
+JungleClear()
+BaronDragonSteal()
+Drawings()			         			
 
-	local myHero = GetMyHero()
+end)
+
+function CountEnemyHeroInRange(object,range)
+	object = object or myHero
+	range = range or 480
+	local enemyInRange = 0
+		for i, enemy in pairs(GoS:GetEnemyHeroes()) do
+    		if (enemy~=nil and GetTeam(myHero)~=GetTeam(enemy) and IsDead(enemy)==false) and GoS:GetDistance(object, enemy)<= 480 then
+    			enemyInRange = enemyInRange + 1
+    		end
+  		end
+	return enemyInRange
+end
+
+function Range()
+
+	rangeQ = GetCastRange(myHero,_Q)
+	rangeW = GetCastRange(myHero,_W)
+	rangeE = GetCastRange(myHero,_E)
+	rangeR = GetCastRange(myHero,_R)
+end	
+
+function Combo()
 	local target = GetCurrentTarget()
-	local rangeQ = GetCastRange(myHero,_Q)
-	local rangeW = GetCastRange(myHero,_W)
-	local rangeE = GetCastRange(myHero,_E)
-	local rangeR = GetCastRange(myHero,_R)
 	local predQ = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),1200,250,1175,75,true,true)
 	local EnemyPos = GetOrigin(target)
-
-					-- Combo --
 
 	                if IOW:Mode() == "Combo" and IsTargetable(target) then
                         if MorganaMenu.Combo.Q:Value() and GoS:ValidTarget (target, 1500) and predQ.HitChance == 1 then
@@ -117,114 +140,41 @@ OnLoop(function(myHero)
             					end
             				end
            				end  
-           			end	                      
- -- Harass --
+           			end
+end
 
-if IOW:Mode() == "Harass" and IsTargetable(target) then
+function Harass()
+	local target = GetCurrentTarget()
+	local predQ = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),1200,250,1175,75,true,true)
+	local EnemyPos = GetOrigin(target)	
+
+		if IOW:Mode() == "Harass" and IsTargetable(target) then
                
-    if MorganaMenu.Harass.Q:Value() and GoS:ValidTarget (target, 1500) and predQ.HitChance == 1 then
-        if CanUseSpell(myHero,_Q) == READY then
-            CastSkillShot(_Q,predQ.PredPos.x, predQ.PredPos.y, predQ.PredPos.z)
-        end    
-    end
+   			if MorganaMenu.Harass.Q:Value() and GoS:ValidTarget (target, 1500) and predQ.HitChance == 1 then
+       			if CanUseSpell(myHero,_Q) == READY then
+            		CastSkillShot(_Q,predQ.PredPos.x, predQ.PredPos.y, predQ.PredPos.z)
+        		end    
+    		end
                        
-	if MorganaMenu.Harass.W:Value() and GoS:ValidTarget (target, rangeW) then
-		if GotBuff(target, "DarkBindingMissile") == 1 then
-    		if CanUseSpell(myHero,_W) == READY then
-        		CastSkillShot(_W,EnemyPos.x,EnemyPos.y,EnemyPos.z)
-    		end    
-		end    
-	end 
+			if MorganaMenu.Harass.W:Value() and GoS:ValidTarget (target, rangeW) then
+				if GotBuff(target, "DarkBindingMissile") == 1 then
+    				if CanUseSpell(myHero,_W) == READY then
+        				CastSkillShot(_W,EnemyPos.x,EnemyPos.y,EnemyPos.z)
+    				end    
+				end    
+			end 
+		end
 end
 
--- Lane Clear --
-
-if IOW:Mode() == "LaneClear" then
-	for i,minion in pairs(GoS:GetAllMinions(MINION_ENEMY)) do
-		if GoS:ValidTarget(minion, rangeQ) then
-			MinionPos = GetOrigin(minion)
-				if CanUseSpell(myHero, _Q) == READY and MorganaMenu.LaneClear.Q:Value() then
-					CastSkillShot(_Q,MinionPos.x,MinionPos.y,MinionPos.z)
-				end
-
-				if CanUseSpell(myHero, _W) == READY and MorganaMenu.LaneClear.W:Value() then
-					CastSkillShot(_W,MinionPos.x,MinionPos.y,MinionPos.z)
-				end
-		end
-	end
-end					
-
--- Jungle Clear --
-
-if MorganaMenu.JungleClear.Junglekey:Value() then
-	for i,junglemobs in pairs(GoS:GetAllMinions(MINION_JUNGLE)) do
-		if GoS:ValidTarget(junglemobs, rangeQ) then
-			JungleMobPos = GetOrigin(junglemobs)
-				if CanUseSpell(myHero, _Q) == READY and MorganaMenu.JungleClear.Q:Value() then
-					CastSkillShot(_Q,JungleMobPos.x,JungleMobPos.y,JungleMobPos.z)
-				end
-
-				if CanUseSpell(myHero, _W) == READY and MorganaMenu.JungleClear.W:Value() then
-					CastSkillShot(_W,JungleMobPos.x,JungleMobPos.y,JungleMobPos.z)
-				end	
-		end
-	end
-end	
-
--- Baron / Dragon Q Steal --
-
-for i,bigmobs in pairs(GoS:GetAllMinions(MINION_JUNGLE)) do
-
-	local myDamage = 25 + 55*GetCastLevel(myHero,_Q) + 0.9*GetBonusAP(myHero)
-	local BigMobPos = GetOrigin(bigmobs)
-
-		-- Ludens Echo --
-
-	local Ludens = 0
-
-		if GotBuff(myHero, "itemmagicshankcharge") > 99 then
-			Ludens = Ludens + 0.1*GetBonusAP(myHero) + 100
-		end	
-
-		if GoS:ValidTarget(bigmobs, rangeQ) and GoS:GetDistance(bigmobs) < rangeQ then 
-			if CanUseSpell(myHero, _Q) == READY and  GoS:CalcDamage(myHero, bigmobs, 0, myDamage + Ludens) > GetCurrentHP(bigmobs) and GetObjectName(bigmobs) == "SRU_Baron" and MorganaMenu.JungleSteal.Q:Value() then
-				CastSkillShot(_Q,BigMobPos.x,BigMobPos.y,BigMobPos.z)
-			elseif CanUseSpell(myHero, _Q) == READY and  GoS:CalcDamage(myHero, bigmobs, 0, myDamage + Ludens) > GetCurrentHP(bigmobs) and GetObjectName(bigmobs) == "SRU_Dragon" and MorganaMenu.JungleSteal.Q:Value() then
-				CastSkillShot(_Q,BigMobPos.x,BigMobPos.y,BigMobPos.z)
-			end
-		end
-end				
-
--- Drawings --
-
-if MorganaMenu.Drawings.Q:Value() then
-                       
-    DrawCircle(GoS:myHeroPos().x,GoS:myHeroPos().y,GoS:myHeroPos().z,rangeQ,3,100,0xff00ff000)   
-end
-
-if MorganaMenu.Drawings.E:Value() then
-
-	DrawCircle(GoS:myHeroPos().x,GoS:myHeroPos().y,GoS:myHeroPos().z,rangeE,3,100,0xff00ff00)
-end
-
-if MorganaMenu.Drawings.R:Value() then
-
-	DrawCircle(GoS:myHeroPos().x,GoS:myHeroPos().y,GoS:myHeroPos().z,rangeR,3,100,0xff00ff00)
-end           			
-
--- KillSteal--
+function Enemyheroes()
 
 for i,enemy in pairs(GoS:GetEnemyHeroes()) do
 
 	local Ignited = 20*GetLevel(myHero)+50 > GetCurrentHP(enemy)+GetDmgShield(enemy)+GetHPRegen(enemy)*2.5
-	
--- KS Spells--
 
 local QPred = GetPredictionForPlayer(GoS:myHeroPos(),enemy,GetMoveSpeed(enemy),1200,250,1175,75,true,true)
 local dmgQ = (GetCastLevel(myHero,_Q))*55 + 25 + 0.9*GetBonusAP(myHero) 
 local dmgR = (GetCastLevel(myHero,_R))*75 + 75 + 0.7*GetBonusAP(myHero)
-
-		-- Luden's Echo --
 
 	local Ludens = 0
 
@@ -248,8 +198,6 @@ local dmgR = (GetCastLevel(myHero,_R))*75 + 75 + 0.7*GetBonusAP(myHero)
             end
         end    
 
-        -- Zhonya at customizable health percentages--
-
 		if GetItemSlot(myHero,3157) > 0 and GoS:ValidTarget (enemy, 900) and GetCurrentHP(myHero)/GetMaxHP(myHero) < 0.50 and MorganaMenu.Zhonya.ZhonyaOne:Value() and GotBuff(enemy, "SoulShackles") > 0 then
         	CastTargetSpell(myHero, GetItemSlot(myHero,3157))
 		end
@@ -266,43 +214,98 @@ local dmgR = (GetCastLevel(myHero,_R))*75 + 75 + 0.7*GetBonusAP(myHero)
 			CastTargetSpell(myHero, GetItemSlot(myHero,3157))
 		end				  
 
-		-- Ult options --
-
-		-- If ulting then cast E on me--
-
 		if GotBuff(enemy, "SoulShackles") > 0 then
 			CastTargetSpell(myHero, _E)
 		end
 
-		-- Ult only 2 Enemies --
-
 		if IOW:Mode() == "Combo" then	
 
-			if CanUseSpell(myHero, _R) == READY and (CountEnemyHeroInRange(enemy,480))>=2 and GoS:ValidTarget(enemy,480) and MorganaMenu.Combo.TwoR:Value() then
+			if CanUseSpell(myHero, _R) == READY and (CountEnemyHeroInRange(enemy,510))>=2 and GoS:ValidTarget(enemy,510) and MorganaMenu.Combo.TwoR:Value() then
 				CastSpell(_R)
 			end	
 
-		-- Ult only 3 Enemies --
-
-			if CanUseSpell(myHero, _R) == READY and (CountEnemyHeroInRange(enemy,480))>=3 and GoS:ValidTarget(enemy,480) and MorganaMenu.Combo.ThreeR:Value() then
+			if CanUseSpell(myHero, _R) == READY and (CountEnemyHeroInRange(enemy,510))>=3 and GoS:ValidTarget(enemy,510) and MorganaMenu.Combo.ThreeR:Value() then
 				CastSpell(_R)
 			end	
 		end	
 
 	end	
-end		
-
--- Used this function from Maxxell --
-
-function CountEnemyHeroInRange(object,range)
-  object = object or myHero
-  range = range or 480
-  local enemyInRange = 0
-  for i, enemy in pairs(GoS:GetEnemyHeroes()) do
-    if (enemy~=nil and GetTeam(myHero)~=GetTeam(enemy) and IsDead(enemy)==false) and GoS:GetDistance(object, enemy)<= 480 then
-    	enemyInRange = enemyInRange + 1
-    end
-  end
-  return enemyInRange
 end
-end)
+end	
+
+function LaneClear()
+
+	if IOW:Mode() == "LaneClear" then
+		for i,minion in pairs(GoS:GetAllMinions(MINION_ENEMY)) do
+			if GoS:ValidTarget(minion, rangeQ) then
+				MinionPos = GetOrigin(minion)
+					if CanUseSpell(myHero, _Q) == READY and MorganaMenu.LaneClear.Q:Value() then
+						CastSkillShot(_Q,MinionPos.x,MinionPos.y,MinionPos.z)
+					end
+
+					if CanUseSpell(myHero, _W) == READY and MorganaMenu.LaneClear.W:Value() then
+						CastSkillShot(_W,MinionPos.x,MinionPos.y,MinionPos.z)
+					end
+			end
+		end
+	end
+end	
+
+function JungleClear()
+
+	if MorganaMenu.JungleClear.Junglekey:Value() then
+		for i,junglemobs in pairs(GoS:GetAllMinions(MINION_JUNGLE)) do
+			if GoS:ValidTarget(junglemobs, rangeQ) then
+				JungleMobPos = GetOrigin(junglemobs)
+					if CanUseSpell(myHero, _Q) == READY and MorganaMenu.JungleClear.Q:Value() then
+						CastSkillShot(_Q,JungleMobPos.x,JungleMobPos.y,JungleMobPos.z)
+					end
+
+					if CanUseSpell(myHero, _W) == READY and MorganaMenu.JungleClear.W:Value() then
+						CastSkillShot(_W,JungleMobPos.x,JungleMobPos.y,JungleMobPos.z)
+					end	
+			end
+		end
+	end
+end
+
+function BaronDragonSteal()
+
+	for i,bigmobs in pairs(GoS:GetAllMinions(MINION_JUNGLE)) do
+
+		local myDamage = 25 + 55*GetCastLevel(myHero,_Q) + 0.9*GetBonusAP(myHero)
+		local BigMobPos = GetOrigin(bigmobs)
+
+		local Ludens = 0
+
+			if GotBuff(myHero, "itemmagicshankcharge") > 99 then
+				Ludens = Ludens + 0.1*GetBonusAP(myHero) + 100
+			end	
+
+			if GoS:ValidTarget(bigmobs, rangeQ) and GoS:GetDistance(bigmobs) < rangeQ then 
+				if CanUseSpell(myHero, _Q) == READY and  GoS:CalcDamage(myHero, bigmobs, 0, myDamage + Ludens) > GetCurrentHP(bigmobs) and GetObjectName(bigmobs) == "SRU_Baron" and MorganaMenu.JungleSteal.Q:Value() then
+					CastSkillShot(_Q,BigMobPos.x,BigMobPos.y,BigMobPos.z)
+				elseif CanUseSpell(myHero, _Q) == READY and  GoS:CalcDamage(myHero, bigmobs, 0, myDamage + Ludens) > GetCurrentHP(bigmobs) and GetObjectName(bigmobs) == "SRU_Dragon" and MorganaMenu.JungleSteal.Q:Value() then
+					CastSkillShot(_Q,BigMobPos.x,BigMobPos.y,BigMobPos.z)
+				end
+			end
+	end
+end	
+
+function Drawings()
+
+	if MorganaMenu.Drawings.Q:Value() then
+                       
+    	DrawCircle(GoS:myHeroPos().x,GoS:myHeroPos().y,GoS:myHeroPos().z,rangeQ,3,100,0xff00ff000)   
+	end
+
+	if MorganaMenu.Drawings.E:Value() then
+
+		DrawCircle(GoS:myHeroPos().x,GoS:myHeroPos().y,GoS:myHeroPos().z,rangeE,3,100,0xff00ff00)
+	end
+
+	if MorganaMenu.Drawings.R:Value() then
+
+		DrawCircle(GoS:myHeroPos().x,GoS:myHeroPos().y,GoS:myHeroPos().z,rangeR,3,100,0xff00ff00)
+	end
+end
