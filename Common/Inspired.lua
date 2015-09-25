@@ -1,4 +1,4 @@
-_G.InspiredVersion = 26
+_G.InspiredVersion = 30
 
 function Set(list)
   local set = {}
@@ -74,11 +74,10 @@ function table.contains(t, what, member) --member is optional
 end
 
 function table.serialize(t, tab, functions)
-  assert(type(t) == "table", "table.serialize: Wrong Argument, table expected")
   local s, len = {"{\n"}, 1
   for i, v in pairs(t) do
     local iType, vType = type(i), type(v)
-    if vType~="userdata" and (functions or vType~="function") then
+    if vType~="userdata" and vType~="function" then
       if tab then 
         s[len+1] = tab 
         len = len + 1
@@ -93,14 +92,9 @@ function table.serialize(t, tab, functions)
       if vType == "number" then 
         s[len+6], s[len+7], len = v, ",\n", len + 7
       elseif vType == "string" then 
-        s[len+6], s[len+7], s[len+8], len = '"', v:unescape(), '",\n', len + 8
-      elseif vType == "table" then 
-        s[len+6], s[len+7], len = table.serialize(v, (tab or "") .. "\t", functions), ",\n", len + 7
+        s[len+6], s[len+7], s[len+8], len = '"', v, '",\n', len + 8
       elseif vType == "boolean" then 
         s[len+6], s[len+7], len = tostring(v), ",\n", len + 7
-      elseif vType == "function" and functions then
-        local dump = string.dump(v)
-        s[len+6], s[len+7], s[len+8], len = "load(Base64Decode(\"", Base64Encode(dump, #dump), "\")),\n", len + 8
       end
     end
   end
@@ -120,6 +114,83 @@ function table.merge(base, t, deepMerge)
     end
   end
   return base
+end
+
+--from http://lua-users.org/wiki/SplitJoin
+function string.split(str, delim, maxNb)
+    -- Eliminate bad cases...
+    if not delim or delim == "" or string.find(str, delim) == nil then
+        return { str }
+    end
+    maxNb = (maxNb and maxNb >= 1) and maxNb or 0
+    local result = {}
+    local pat = "(.-)" .. delim .. "()"
+    local nb = 0
+    local lastPos
+    for part, pos in string.gmatch(str, pat) do
+        nb = nb + 1
+        if nb == maxNb then
+            result[nb] = lastPos and string.sub(str, lastPos, #str) or str
+            break
+        end
+        result[nb] = part
+        lastPos = pos
+    end
+    -- Handle the last field
+    if nb ~= maxNb then
+        result[nb + 1] = string.sub(str, lastPos)
+    end
+    return result
+end
+
+function string.join(arg, del)
+    return table.concat(arg, del)
+end
+
+function string.trim(s)
+    return s:match'^%s*(.*%S)' or ''
+end
+
+function string.unescape(s)
+    return s:gsub(".",{
+        ["\a"] = [[\a]],
+        ["\b"] = [[\b]],
+        ["\f"] = [[\f]],
+        ["\n"] = [[\n]],
+        ["\r"] = [[\r]],
+        ["\t"] = [[\t]],
+        ["\v"] = [[\v]],
+        ["\\"] = [[\\]],
+        ['"'] = [[\"]],
+        ["'"] = [[\']],
+        ["["] = "\\[",
+        ["]"] = "\\]",
+      })
+end
+
+function math.isNaN(num)
+    return num ~= num
+end
+
+-- Round half away from zero
+function math.round(num, idp)
+    assert(type(num) == "number", "math.round: wrong argument types (<number> expected for num)")
+    assert(type(idp) == "number" or idp == nil, "math.round: wrong argument types (<integer> expected for idp)")
+    local mult = 10 ^ (idp or 0)
+    if num >= 0 then return math.floor(num * mult + 0.5) / mult
+    else return math.ceil(num * mult - 0.5) / mult
+    end
+end
+
+function math.close(a, b, eps)
+    assert(type(a) == "number" and type(b) == "number", "math.close: wrong argument types (at least 2 <number> expected)")
+    eps = eps or 1e-9
+    return math.abs(a - b) <= eps
+end
+
+function math.limit(val, min, max)
+    assert(type(val) == "number" and type(min) == "number" and type(max) == "number", "math.limit: wrong argument types (3 <number> expected)")
+    return math.min(max, math.max(min, val))
 end
 
 function print(...)
@@ -267,8 +338,8 @@ function __Menu__DrawSliderSwitch(param, x, y)
   FillRect(x, y, _SC.width, 40,ARGB(255, 0, 0, 0))
   DrawText("Value: "..math.ceil(math.floor(param.__val*param.__inc*1000)/param.__inc)/1000,15,x+5,y,0xffffffff)
   DrawText("[X]",15,x+_SC.width-20,y,0xffffffff)
-  DrawText(param.__min,15,x+5,y+20,0xffffffff)
-  DrawText(param.__max,15,x+_SC.width-25,y+20,0xffffffff)
+  DrawText(" "..param.__min,15,x+5,y+20,0xffffffff)
+  DrawText(" "..param.__max,15,x+_SC.width-25,y+20,0xffffffff)
   FillRect(x+15,y+20, _SC.width-45, 18, ARGB(55, 255, 255, 255))
   local off = (_SC.width-45) / math.abs(param.__min-param.__max) / param.__inc
   local v = x+15+(param.__val-param.__min)*off
@@ -658,15 +729,13 @@ end
 function goslib:MakeObjectManager()
   _G.objectManager = {}
   objectManager.objects = {}
-  objectManager.unsorted = {}
   objectManager.objectLCallbackId = 1
   objectManager.objectACallbackId = 1
-  objectManager.objectSCallbackId = 2
   objectManager.tick = 0
   local done = false
   self.objectLoopEvents[objectManager.objectLCallbackId] = function(object)
     done = true
-    objectManager.objects[GetNetworkID(object)] = object
+    objectManager.objects[object] = object
   end
   self.afterObjectLoopEvents[objectManager.objectACallbackId] = function()
     if done and self.objectLoopEvents[objectManager.objectLCallbackId] then
@@ -678,22 +747,17 @@ function goslib:MakeObjectManager()
       self.afterObjectLoopEvents[objectManager.objectACallbackId] = nil
     end
   end
-  self.afterObjectLoopEvents[objectManager.objectSCallbackId] = function()
-    if objectManager.tick > GetTickCount() then return end
-    objectManager.tick = GetTickCount() + 125
-    for _, object in pairs(objectManager.unsorted) do
-      local nID = GetNetworkID(object)
-      if nID and nID > 0 then
-        objectManager.objects[nID] = object
-      end
-    end
-  end
   OnCreateObj(function(object)
-    table.insert(objectManager.unsorted, object)
+    objectManager.objects[object] = object
   end)
   OnDeleteObj(function(object)
-    objectManager.objects[GetNetworkID(object)] = nil
+    objectManager.objects[object] = nil
   end)
+  local function CleanUp()
+    collectgarbage()
+    self:DelayAction(CleanUp, 10)
+  end
+  CleanUp()
 end
 
 function goslib:FindHeroes()
@@ -765,12 +829,12 @@ function goslib:AddGapcloseEvent(spell, range, targeted)
     self:DelayAction(function()
         for _,k in pairs(self:GetEnemyHeroes()) do
           if self.gapcloserTable[GetObjectName(k)] then
-            GapcloseConfig:Boolean(GetObjectName(k).."agap", "On "..GetObjectName(k).." "..(type(gapcloserTable[GetObjectName(k)]) == 'number' and self.str[gapcloserTable[GetObjectName(k)]] or (GetObjectName(k) == "LeeSin" and "Q" or "E")), true)
+            GapcloseConfig:Boolean(GetObjectName(k).."agap", "On "..GetObjectName(k).." "..(type(self.gapcloserTable[GetObjectName(k)]) == 'number' and self.str[self.gapcloserTable[GetObjectName(k)]] or (GetObjectName(k) == "LeeSin" and "Q" or "E")), true)
           end
         end
     end, 1)
     OnProcessSpell(function(unit, spell)
-      if not unit or not self.gapcloserTable[GetObjectName(unit)] or not GapcloseConfig[GetObjectName(unit).."agap"]:Value() then return end
+      if not unit or not self.gapcloserTable[GetObjectName(unit)] or GapcloseConfig[GetObjectName(unit).."agap"] == nil or not GapcloseConfig[GetObjectName(unit).."agap"]:Value() then return end
       local unitName = GetObjectName(unit)
       if spell.name == (type(self.gapcloserTable[unitName]) == 'number' and GetCastName(unit, self.gapcloserTable[unitName]) or self.gapcloserTable[unitName]) and (spell.target == myHero or self:GetDistanceSqr(spell.endPos) < self.GapcloseRange*self.GapcloseRange*4) then
         self.GapcloseTime = GetTickCount() + 2000
@@ -888,7 +952,7 @@ end
 
 function goslib:ValidTarget(unit, range)
     range = range or 25000
-    if unit == nil or GetOrigin(unit) == nil or IsImmune(unit,myHero) or IsDead(unit) or not IsVisible(unit) or GetTeam(unit) == GetTeam(myHero) or not self:IsInDistance(unit, range) then return false end
+    if unit == nil or GetOrigin(unit) == nil or not IsTargetable(unit,myHero) or IsImmune(unit,myHero) or IsDead(unit) or not IsVisible(unit) or GetTeam(unit) == GetTeam(myHero) or not self:IsInDistance(unit, range) then return false end
     return true
 end
 
