@@ -63,7 +63,7 @@ end
 -- KS
 
 for i,enemy in pairs(GoS:GetEnemyHeroes()) do
-if CanUseSpell(myHero,R) == READY then
+if CanUseSpell(myHero,_R) == READY then
 local rDMG = GoS:CalcDamage(myHero, enemy, 0, (150*GetCastLevel(myHero,_R)+ 40 + (0.80*GetBonusAP(myHero)) + (0.90*(GetBaseDamage(myHero) + GetBonusDmg(myHero)))))
 	DrawDmgOverHpBar(enemy,GetCurrentHP(enemy),rDMG,0,0xff00ff00)
 end
@@ -90,7 +90,7 @@ end
 		  
 	if CanUseSpell(myHero,_Q) == READY then
 		local qDMG = GoS:CalcDamage(myHero, enemy, 0, (20*GetCastLevel(myHero,_Q)+ 15 + (0.40*GetBonusAP(myHero)) + (1.1*(GetBaseDamage(myHero) + GetBonusDmg(myHero)))))
-		local QPred = GetPredictionForPlayer(myHeroPos,enemy,GetMoveSpeed(enemy),2000,250,1200,160,true,false)
+		local QPred = GetPredictionForPlayer(myHeroPos,enemy,GetMoveSpeed(enemy),2000,250,1200,60,true,false)
 			if CanUseSpell(myHero, _Q) == READY and QPred.HitChance == 1 and GoS:ValidTarget(enemy, 1200) and mainMenu.Killsteal.ksQ:Value() and GetCurrentHP(enemy) < qDMG then  
 				CastSkillShot(_Q,QPred.PredPos.x,QPred.PredPos.y,QPred.PredPos.z)
 			end

@@ -1,62 +1,149 @@
-ballPos = nil
-rComboDmg = 0
-Config = scriptConfig("IOrianna", "Orianna.lua")
-Config.addParam("Q", "Use Q", SCRIPT_PARAM_ONOFF, true)
-Config.addParam("W", "Use W", SCRIPT_PARAM_ONOFF, true)
-Config.addParam("E", "Use E", SCRIPT_PARAM_ONOFF, true)
-Config.addParam("R", "Use R", SCRIPT_PARAM_ONOFF, true)
-Config.addParam("Ra", "Use R if 3 hit", SCRIPT_PARAM_ONOFF, true)
+if GetObjectName(myHero) ~= "Orianna" then return end
+
+local Ball = nil
+	
+OriannaMenu = Menu("Orianna", "Orianna")
+OriannaMenu:SubMenu("Combo", "Combo")
+OriannaMenu.Combo:Boolean("Q", "Use Q", true)
+OriannaMenu.Combo:Boolean("W", "Use W", true)
+OriannaMenu.Combo:Boolean("E", "Use E", true)
+OriannaMenu.Combo:Boolean("R", "Use R")
+OriannaMenu.Combo.R:Slider("Rcatch", "if can catch X enemies", 2, 0, 5, 1)
+OriannaMenu.Combo.R:Boolean("Rkill", "if Can Kill", true)
+OriannaMenu.Misc:Key("FlashR", "R Flash Combo", string.byte("G"))
+OriannaMenu.Combo.R:Slider("FlashRcatch", "if can catch X enemies", 3, 0, 5, 1)
+
+OriannaMenu:SubMenu("Harass", "Harass")
+OriannaMenu.Harass:Boolean("Q", "Use Q", true)
+OriannaMenu.Harass:Boolean("W", "Use W", true)
+OriannaMenu.Harass:Boolean("E", "Use E", false)
+OriannaMenu.Harass:Slider("Mana", "if Mana % is More than", 30, 0, 80, 1)
+
+OriannaMenu:SubMenu("Killsteal", "Killsteal")
+OriannaMenu.Killsteal:Boolean("Q", "Killsteal with Q", false)
+OriannaMenu.Killsteal:Boolean("W", "Killsteal with W", true)
+OriannaMenu.Killsteal:Boolean("E", "Killsteal with E", false)
+
+OriannaMenu:SubMenu("Misc", "Misc")
+OriannaMenu.Misc:Boolean("Autoignite", "Auto Ignite", true)
+OriannaMenu.Misc:Boolean("Autolvl", "Auto level", true)
+OriannaMenu.Misc:List("Autolvltable", "Priority", 1, {"Q-W-E", "W-Q-E", "Q-E-W"})
+OriannaMenu.Misc:SubMenu("AutoUlt", "Auto Ult")
+OriannaMenu.Misc.AutoUlt:Slider("1", "if Can Catch X Enemies", 3, 0, 5, 1)
+OriannaMenu.Misc.AutoUlt:Slider("2", "if Can Kill X Enemies", 2, 0, 5, 1)
+
+OriannaMenu:SubMenu("JungleClear", "JungleClear")
+OriannaMenu.JungleClear:Boolean("Q", "Use Q", true)
+OriannaMenu.JungleClear:Boolean("W", "Use W", true)
+OriannaMenu.JungleClear:Boolean("E", "Use E", true)
+
+OriannaMenu:SubMenu("Drawings", "Drawings")
+OriannaMenu.Drawings:Boolean("Q", "Draw Q Range", true)
+OriannaMenu.Drawings:Boolean("W", "Draw W Radius", true)
+OriannaMenu.Drawings:Boolean("E", "Draw E Range", true)
+OriannaMenu.Drawings:Boolean("R", "Draw R Radius", true)
+OriannaMenu.Drawings:Boolean("Ball", "Draw Ball Position", true)
+
+CHANELLING_SPELLS = {
+    ["Katarina"]                    = {_R},
+    ["FiddleSticks"]                = {_R},
+    ["VelKoz"]                      = {_R},
+    ["Malzahar"]                    = {_R},
+    ["Warwick"]                     = {_R},
+}
+
+local callback = nil
+ 
+OnProcessSpell(function(unit, spell)    
+    if not callback or not unit or GetObjectType(unit) ~= Obj_AI_Hero  or GetTeam(unit) == GetTeam(GetMyHero()) then return end
+    local unitChanellingSpells = CHANELLING_SPELLS[GetObjectName(unit)]
+ 
+        if unitChanellingSpells then
+            for _, spellSlot in pairs(unitChanellingSpells) do
+                if spell.name == GetCastName(unit, spellSlot) then callback(unit, CHANELLING_SPELLS) end
+            end
+		end
+end)
+ 
+function addInterrupterCallback( callback0 )
+        callback = callback0
+end
+
 
 OnLoop(function(myHero)
-	if ballPos and (GetDistanceSqr(ballPos) <= (GetHitBox(myHero)*2+7)^2 or GetDistanceSqr(ballPos) > 1250*1250) then
-      ballPos = nil
-    end
-	if ballPos then
-		DrawCircle(ballPos.x,ballPos.y,ballPos.z,150,5,1000,0xff00ff00)
+	
+	if IOW:Mode() == "Combo" then
+	
+        local target = GetCurrentTarget()
+	local targetPos = GetOrigin(target)
+	local QPred = GetPredictionForPlayer(GetOrigin(Ball) or GoS:myHeroPos(),target,GetMoveSpeed(target),1200,0,825,80,false,true)
+
+	if CanUseSpell(myHero, _Q) == READY and QPred.HitChance == 1 and OriannaMenu.Combo.Q:Value() and GoS:ValidTarget(target, 825) then
+        CastSkillShot(_Q,QPred.PredPos.x,QPred.PredPos.y,QPred.PredPos.z)   
 	end
-	for _, unit in pairs(GetEnemyHeroes()) do
-		if unit and CanUseSpell(myHero, _R) == READY then
-			rComboDmg = CalcDamage(myHero, unit, 0, 105+105*GetCastLevel(myHero,_R)+1.2*GetBonusAP(myHero))
-			if rComboDmg > 0 then
-				DrawDmgOverHpBar(unit,GetCurrentHP(unit),0,rComboDmg,0xffffffff)
-			end
-		end
+	
+	if CanUseSpell(myHero, _W) == READY and OriannaMenu.Combo.W:Value() and GoS:ValidTarget(target, 825) then
+	 if GoS:GetDistance(Ball or GoS:myHeroPos(), target) < 250 then
+	 CastSpell(_W)
+         end
+        end
+
+        if Ball ~= nil and CanUseSpell(myHero, _E) == READY and GoS:ValidTarget(target, 1000) and OriannaMenu.Combo.E:Value() then
+          local pointSegment,pointLine,isOnSegment  = VectorPointProjectionOnLineSegment(GoS:myHeroPos(), targetPos, Vector(Ball))
+          if pointLine and GoS:GetDistance(pointSegment, target) < 80 then
+          CastTargetSpell(myHero, _E)
+          end
+        end	
+end
+	
+	if IOW:Mode() == "Harass" then
+	
+        local target = GetCurrentTarget()
+	local targetPos = GetOrigin(target)
+	local QPred = GetPredictionForPlayer(GetOrigin(Ball) or GoS:myHeroPos(),target,GetMoveSpeed(target),1200,0,825,80,false,true)
+
+	if CanUseSpell(myHero, _Q) == READY and QPred.HitChance == 1 and OriannaMenu.Harass.Q:Value() and GoS:ValidTarget(target, 825) then
+        CastSkillShot(_Q,QPred.PredPos.x,QPred.PredPos.y,QPred.PredPos.z)   
 	end
-	if not IWalkConfig.Combo then return end
-	local unit = GetTarget(1000, DAMAGE_MAGIC)
-	if unit then
-		local uPos = GetOrigin(unit)
-		local QPred = GetPredictionForPlayer(ballPos or GetMyHeroPos(),unit,GetMoveSpeed(unit),1200,250,825,175,true,true)
-		if CanUseSpell(myHero, _Q) == READY and QPred.HitChance == 1 and Config.Q then
-			local pos = GenerateThrowPos(QPred.PredPos)
-    		CastSkillShot(_Q,pos.x,pos.y,pos.z)
-		end
-		if CanUseSpell(myHero, _W) == READY and Config.W and GetDistanceSqr(ballPos or GetMyHeroPos(),GetOrigin(unit)) < 225*225 then
-    		CastTargetSpell(myHero, _W)
-		end
-		if CanUseSpell(myHero, _E) == READY and Config.E and ballPos and GetDistanceSqr(ballPos,GetOrigin(unit)) < 80*80 and GetDistanceSqr(GetMyHeroPos(),GetOrigin(unit)) < GetDistanceSqr(GetMyHeroPos(),ballPos) then
-    		CastTargetSpell(myHero, _E)
-		end
-		if CanUseSpell(myHero, _R) == READY and Config.R and CalcDamage(myHero, unit, 0, 105+105*GetCastLevel(myHero,_R)+1.2*GetBonusAP(myHero)) >= GetCurrentHP(unit) and CalcDamage(myHero, unit, 0, 105+105*GetCastLevel(myHero,_R)+1.2*GetBonusAP(myHero)) <= 0.25*GetCurrentHP(unit) and (GetDistanceSqr(ballPos or GetMyHeroPos(),GetOrigin(unit)) < 375*375) then
-    		CastTargetSpell(myHero, _R)
-		end
-		if CanUseSpell(myHero, _R) == READY and Config.Ra and EnemiesAround(ballPos or GetMyHeroPos(), 375) >= 3 then
-    		CastTargetSpell(myHero, _R)
-		end
-	end
+	
+	if CanUseSpell(myHero, _W) == READY and OriannaMenu.Harass.W:Value() and GoS:ValidTarget(target, 825) then
+	local BallPos = Ball or myHero
+	 if GoS:GetDistance(Ball or GoS:myHeroPos(), target) < 250 then
+	 CastSpell(_W)
+         end
+        end
+
+        if Ball ~= nil and CanUseSpell(myHero, _E) == READY and GoS:ValidTarget(target, 1000) and OriannaMenu.Harass.E:Value() then
+          local pointSegment,pointLine,isOnSegment  = VectorPointProjectionOnLineSegment(GoS:myHeroPos(), targetPos, Vector(Ball))
+          if pointLine and GoS:GetDistance(pointSegment, target) < 80 then
+          CastTargetSpell(myHero, _E)
+          end
+        end	
+end
+
 end)
 
 OnProcessSpell(function(unit, spell)
-	if unit and unit == GetMyHero() and spell and spell.name == "OrianaIzunaCommand" then
-		ballPos = spell.endPos
+    if unit and spell and spell.name then
+      if unit == myHero then
+        if spell.name:lower():find("orianaizunacommand") then 
+	Ball = spell.endPos
 	end
-	if unit and unit == GetMyHero() and spell and spell.name == "OrianaRedactCommand" then
-		ballPos = nil
+		
+	if spell.name:lower():find("orianaredactcommand") then 
+	Ball = spell.target
 	end
+      end
+    end
 end)
 
-function GenerateThrowPos(pos)
-    local tV = {x = (pos.x-GetMyHeroPos().x), z = (pos.z-GetMyHeroPos().z)}
-    local len = math.sqrt(tV.x * tV.x + tV.z * tV.z)
-    return {x = pos.x + 55 * tV.x / len, y = 0, z = pos.z + 55 * tV.z / len}
+OnCreateObj(function(Object) 
+
+if GetObjectBaseName(Object) == "Orianna_Ball_Flash_Reverse" then
+Ball = nil
 end
+if GetObjectBaseName(Object) == "yomu_ring_green" then
+Ball = Object
+end
+
+end)
