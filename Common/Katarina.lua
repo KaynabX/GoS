@@ -1,6 +1,6 @@
 if GetObjectName(myHero) ~= "Katarina" then return end
 
-KatarinaMenu = Menu("Katarina", "Katarina")
+local KatarinaMenu = Menu("Katarina", "Katarina")
 KatarinaMenu:SubMenu("Combo", "Combo")
 KatarinaMenu.Combo:Boolean("Q", "Use Q", true)
 KatarinaMenu.Combo:Boolean("W", "Use W", true)
@@ -172,7 +172,7 @@ OnCreateObj(function(object)
 	end
 end)
 
-OnDeleteObj(function(Object)
+OnDeleteObj(function(object)
 	local objType = GetObjectType(object)
 	if objType == Obj_AI_Hero or objType == Obj_AI_Minion then
 	objectList[object] = nil
@@ -286,21 +286,21 @@ end
 				
 				elseif CanUseSpell(myHero, _Q) == READY and CanUseSpell(myHero, _W) == READY and GetCurrentHP(enemy)+GetMagicShield(enemy)+GetDmgShield(enemy) < GoS:CalcDamage(myHero, enemy, 0, 35 + 25*GetCastLevel(myHero,_Q) + 0.45*GetBonusAP(myHero) + 5 + 35*GetCastLevel(myHero,_W) + 0.25*GetBonusAP(myHero) + 0.60*GetBonusDmg(myHero) + ExtraDmg) and GoS:ValidTarget(enemy, 375) then 
 				CastSpell(_W)
-				CastTargetSpell(enemy, _Q)
+                                GoS:DelayAction(function() CastTargetSpell(enemy, _Q) end, 250)
 		
 				elseif CanUseSpell(myHero, _E) == READY and CanUseSpell(myHero, _W) == READY and GetCurrentHP(enemy)+GetMagicShield(enemy)+GetDmgShield(enemy) < GoS:CalcDamage(myHero, enemy, 0, 10 + 30*GetCastLevel(myHero,_E) + 0.25*GetBonusAP(myHero) + 5 + 35*GetCastLevel(myHero,_W) + 0.25*GetBonusAP(myHero) + 0.60*GetBonusDmg(myHero) + ExtraDmg) and GoS:ValidTarget(enemy, 700) then 
 				CastTargetSpell(enemy, _E)
-				CastSpell(_W)
+				GoS:DelayAction(function() CastSpell(_W) end, 250)
 				
 				elseif CanUseSpell(myHero, _Q) == READY and CanUseSpell(myHero, _W) == READY and CanUseSpell(myHero, _E) == READY and GetCurrentHP(enemy)+GetMagicShield(enemy)+GetDmgShield(enemy) < GoS:CalcDamage(myHero, enemy, 0, 35 + 25*GetCastLevel(myHero,_Q) + 0.45*GetBonusAP(myHero) + 5 + 35*GetCastLevel(myHero,_W) + 0.25*GetBonusAP(myHero) + 0.60*GetBonusDmg(myHero) + 10 + 30*GetCastLevel(myHero,_E) + 0.25*GetBonusAP(myHero) + ExtraDmg) and GoS:ValidTarget(enemy, 700) then 
 				CastTargetSpell(enemy, _E)
-				CastTargetSpell(enemy, _Q)
-				CastSpell(_W)
+				GoS:DelayAction(function() CastTargetSpell(enemy, _Q) end, 250)
+				GoS:DelayAction(function() CastSpell(_W) end, 250)
 				end
 				
 	                        if KatarinaMenu.Killsteal.UseWards:Value() and GoS:ValidTarget(enemy, 1275) and GoS:GetDistance(enemy) > 700 and CanUseSpell(myHero, _Q) == READY and GetCurrentHP(enemy)+GetMagicShield(enemy)+GetDmgShield(enemy) < GoS:CalcDamage(myHero, enemy, 0, 35 + 25*GetCastLevel(myHero,_Q) + 0.45*GetBonusAP(myHero) + ExtraDmg) then
 			        wardJump(GetOrigin(enemy))
-		                CastTargetSpell(enemy, _Q)
+		                GoS:DelayAction(function() CastTargetSpell(enemy, _Q) end, 250)
 	                        end
 				
 	end
@@ -368,10 +368,10 @@ for _,mob in pairs(GoS:GetAllMinions(MINION_JUNGLE)) do
 	end
 end
 
-if KatarinaMenu.Drawings.Q:Value() then DrawCircle(GoS:myHeroPos().x,GoS:myHeroPos().y,GoS:myHeroPos().z,675,0,1,0xff00ff00) end
-if KatarinaMenu.Drawings.W:Value() then DrawCircle(GoS:myHeroPos().x,GoS:myHeroPos().y,GoS:myHeroPos().z,375,0,1,0xff00ff00) end
-if KatarinaMenu.Drawings.E:Value() then DrawCircle(GoS:myHeroPos().x,GoS:myHeroPos().y,GoS:myHeroPos().z,700,0,1,0xff00ff00) end
-if KatarinaMenu.Drawings.R:Value() then DrawCircle(GoS:myHeroPos().x,GoS:myHeroPos().y,GoS:myHeroPos().z,550,0,1,0xff00ff00) end
+if KatarinaMenu.Drawings.Q:Value() then DrawCircle(GoS:myHeroPos().x,GoS:myHeroPos().y,GoS:myHeroPos().z,675,1,128,0xff00ff00) end
+if KatarinaMenu.Drawings.W:Value() then DrawCircle(GoS:myHeroPos().x,GoS:myHeroPos().y,GoS:myHeroPos().z,375,1,128,0xff00ff00) end
+if KatarinaMenu.Drawings.E:Value() then DrawCircle(GoS:myHeroPos().x,GoS:myHeroPos().y,GoS:myHeroPos().z,700,1,128,0xff00ff00) end
+if KatarinaMenu.Drawings.R:Value() then DrawCircle(GoS:myHeroPos().x,GoS:myHeroPos().y,GoS:myHeroPos().z,550,1,128,0xff00ff00) end
   if KatarinaMenu.Drawings.Text:Value() then
 	for _, enemy in pairs(GoS:GetEnemyHeroes()) do
 		if GoS:ValidTarget(enemy) then

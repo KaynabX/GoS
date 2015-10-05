@@ -329,7 +329,7 @@ function __Menu__DrawListSwitch(param, x, y)
     if param.__val == i then
       DrawText("->",15,x+5,20*(i-1)+y,0xffffffff)
     end
-    DrawText(entry,15,x+35,20*(i-1)+y,0xffffffff)
+    DrawText(tostring(entry),15,x+35,20*(i-1)+y,0xffffffff)
   end
 end
 
@@ -338,8 +338,8 @@ function __Menu__DrawSliderSwitch(param, x, y)
   FillRect(x, y, _SC.width, 40,ARGB(255, 0, 0, 0))
   DrawText("Value: "..math.ceil(math.floor(param.__val*param.__inc*1000)/param.__inc)/1000,15,x+5,y,0xffffffff)
   DrawText("[X]",15,x+_SC.width-20,y,0xffffffff)
-  DrawText(""..param.__min,15,x+5,y+20,0xffffffff)
-  DrawText(""..param.__max,15,x+_SC.width-25,y+20,0xffffffff)
+  DrawText(tostring(""..param.__min),15,x+5,y+20,0xffffffff)
+  DrawText(tostring(""..param.__max),15,x+_SC.width-25,y+20,0xffffffff)
   FillRect(x+15,y+20, _SC.width-45, 18, ARGB(55, 255, 255, 255))
   local off = (_SC.width-45) / math.abs(param.__min-param.__max) / param.__inc
   local v = x+15+(param.__val-param.__min)*off
@@ -1040,7 +1040,7 @@ function goslib:CastOffensiveItems(unit)
       return true
     end
   end
-  if ValidTarget(unit) then
+  if self:ValidTarget(unit) then
     for _,k in pairs(u) do
       slot = GetItemSlot(myHero,k)
       if slot ~= nil and slot ~= 0 and CanUseSpell(myHero, slot) == READY then

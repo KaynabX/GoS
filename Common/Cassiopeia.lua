@@ -1,6 +1,6 @@
 if GetObjectName(myHero) ~= "Cassiopeia" then return end
 
-CassiopeiaMenu = Menu("Cassiopeia", "Cassiopeia")
+local CassiopeiaMenu = Menu("Cassiopeia", "Cassiopeia")
 CassiopeiaMenu:SubMenu("Combo", "Combo")
 CassiopeiaMenu.Combo:Boolean("Q", "Use Q", true)
 CassiopeiaMenu.Combo:Boolean("W", "Use W", true)
@@ -84,19 +84,17 @@ OnLoop(function(myHero)
 		local unit = GetCurrentTarget()
 		local QPred = GetPredictionForPlayer(GoS:myHeroPos(),unit,GetMoveSpeed(unit),math.huge,600,850,75,false,true)
 		local WPred = GetPredictionForPlayer(GoS:myHeroPos(),unit,GetMoveSpeed(unit),2500,500,925,90,false,true)
-		local RPred = GetPredictionForPlayer(GoS:myHeroPos(),unit,GetMoveSpeed(unit),math.huge,300,800,180,false,true)
-		
-		local poisoned = false
-		for i=0, 63 do
-		    if unit and GoS:ValidTarget(unit, 700) and GetBuffCount(unit,i) > 0 and GetBuffName(unit,i):lower():find("poison") then
-		        poisoned = true
-		    end
-		end
-      
-		if IsFacing(unit, 800) and GoS:ValidTarget(unit, 800) and CassiopeiaMenu.Combo.R:Value() and 100*GetCurrentHP(unit)/GetMaxHP(unit) <= 60 then
+		local RPred = GetPredictionForPlayer(GoS:myHeroPos(),unit,GetMoveSpeed(unit),math.huge,300,825, 80*math.pi/180,false,true)
+	      
+		if IsFacing(unit, 825) and GoS:ValidTarget(unit, 825) and CassiopeiaMenu.Combo.R:Value() and 100*GetCurrentHP(unit)/GetMaxHP(unit) <= 50 and 100*GetCurrentMana(myHero)/GetMaxMana(myHero) >= 30 then
 		CastSkillShot(_R,RPred.PredPos.x,RPred.PredPos.y,RPred.PredPos.z)
 		end
-		
+	       
+                local poisoned = false
+                if GotBuff(unit, "cassiopeianoxiousblastpoison") > 0 or GotBuff(unit, "cassiopeiamiasmapoison") > 0 and GoS:ValidTarget(unit, 700) then
+                poisoned = true
+                end
+
 	        if CanUseSpell(myHero, _E) == READY and CassiopeiaMenu.Combo.E:Value() and GoS:ValidTarget(unit, 700) and poisoned then
 		CastTargetSpell(unit, _E)
 		end
@@ -105,7 +103,7 @@ OnLoop(function(myHero)
 		CastSkillShot(_Q,QPred.PredPos.x,QPred.PredPos.y,QPred.PredPos.z)
 		end
 		
-		if CanUseSpell(myHero, _W) == READY and CassiopeiaMenu.Combo.W:Value() and GoS:ValidTarget(unit, 925) and WPred.HitChance == 1 and not poisoned then
+		if CanUseSpell(myHero, _W) == READY and CassiopeiaMenu.Combo.W:Value() and GoS:ValidTarget(unit, 925) and WPred.HitChance == 1 and not targetpoisoned then
 		CastSkillShot(_W,WPred.PredPos.x,WPred.PredPos.y,WPred.PredPos.z)
 		end
 		
@@ -117,14 +115,12 @@ OnLoop(function(myHero)
 		local QPred = GetPredictionForPlayer(GoS:myHeroPos(),unit,GetMoveSpeed(unit),math.huge,600,850,75,false,true)
 		local WPred = GetPredictionForPlayer(GoS:myHeroPos(),unit,GetMoveSpeed(unit),2500,500,925,90,false,true)
 		local RPred = GetPredictionForPlayer(GoS:myHeroPos(),unit,GetMoveSpeed(unit),math.huge,300,800,180,false,true)
-		
-		local poisoned = false
-		for i=0, 63 do
-		    if unit and GoS:ValidTarget(unit, 700) and GetBuffCount(unit,i) > 0 and GetBuffName(unit,i):lower():find("poison") then
-			poisoned = true
-		    end
-		end
-		
+
+                local poisoned = false
+                if GotBuff(unit, "cassiopeianoxiousblastpoison") > 0 or GotBuff(unit, "cassiopeiamiasmapoison") > 0 and GoS:ValidTarget(unit, 700) then
+                poisoned = true
+                end
+
 	        if CanUseSpell(myHero, _E) == READY and CassiopeiaMenu.Harass.E:Value() and GoS:ValidTarget(unit, 700) and poisoned then
 		CastTargetSpell(unit, _E)
 		end
@@ -176,18 +172,15 @@ end
 
 for _,minion in pairs(GoS:GetAllMinions(MINION_ENEMY)) do
 
-                local unit = minion
-		local poisoned = false
-		for i=0, 63 do
-		    if unit and GoS:ValidTarget(unit, 700) and GetBuffCount(unit,i) > 0 and GetBuffName(unit,i):lower():find("poison") then
-			poisoned = true
-		    end
-		end
-		
 		local ExtraDmg = 0
 		if GotBuff(myHero, "itemmagicshankcharge") > 99 then
 		ExtraDmg = ExtraDmg + 0.1*GetBonusAP(myHero) + 100
 		end
+                       
+                local poisoned = false
+                if GotBuff(minion, "cassiopeianoxiousblastpoison") > 0 or GotBuff(minion, "cassiopeiamiasmapoison") > 0 and GoS:ValidTarget(minion, 700) then
+                poisoned = true
+                end
 
         if IOW:Mode() == "LaneClear" then
 		  if CanUseSpell(myHero, _E) == READY and CassiopeiaMenu.Farm.LaneClear.E:Value() and GoS:IsInDistance(minion, 700) and poisoned and 100*GetCurrentMana(myHero)/GetMaxMana(myHero) >= CassiopeiaMenu.Farm.LaneClear.Mana:Value() then
@@ -212,16 +205,13 @@ end
 
 for _,mob in pairs(GoS:GetAllMinions(MINION_JUNGLE)) do
         
-	        local mobPos = GetOrigin(mob)
-                local unit = mob
-     	        local poisoned = false
-	        local poisoned = false
-		for i=0, 63 do
-		    if unit and GoS:ValidTarget(unit, 700) and GetBuffCount(unit,i) > 0 and GetBuffName(unit,i):lower():find("poison") then
-			poisoned = true
-		    end
-		end
-		
+	local mobPos = GetOrigin(mob)
+
+                local poisoned = false
+                if GotBuff(mob, "cassiopeianoxiousblastpoison") > 0 or GotBuff(mob, "cassiopeiamiasmapoison") > 0 and GoS:ValidTarget(mob, 700) then
+                poisoned = true
+                end
+
         if IOW:Mode() == "LaneClear" then
 		
 	        if CanUseSpell(myHero, _E) == READY and CassiopeiaMenu.JungleClear.E:Value() and GoS:IsInDistance(mob, 700) and poisoned then
@@ -238,16 +228,16 @@ for _,mob in pairs(GoS:GetAllMinions(MINION_JUNGLE)) do
 	end
 end
 
-if CassiopeiaMenu.Drawings.Q:Value() then DrawCircle(GoS:myHeroPos().x, GoS:myHeroPos().y, GoS:myHeroPos().z,GetCastRange(myHero,_Q),0,1,0xff00ff00) end
-if CassiopeiaMenu.Drawings.W:Value() then DrawCircle(GoS:myHeroPos().x, GoS:myHeroPos().y, GoS:myHeroPos().z,GetCastRange(myHero,_W),0,1,0xff00ff00) end
-if CassiopeiaMenu.Drawings.E:Value() then DrawCircle(GoS:myHeroPos().x, GoS:myHeroPos().y, GoS:myHeroPos().z,GetCastRange(myHero,_E),0,1,0xff00ff00) end
-if CassiopeiaMenu.Drawings.R:Value() then DrawCircle(GoS:myHeroPos().x, GoS:myHeroPos().y, GoS:myHeroPos().z,GetCastRange(myHero,_R),0,1,0xff00ff00) end
+if CassiopeiaMenu.Drawings.Q:Value() then DrawCircle(GoS:myHeroPos().x, GoS:myHeroPos().y, GoS:myHeroPos().z,GetCastRange(myHero,_Q),1,128,0xff00ff00) end
+if CassiopeiaMenu.Drawings.W:Value() then DrawCircle(GoS:myHeroPos().x, GoS:myHeroPos().y, GoS:myHeroPos().z,GetCastRange(myHero,_W),1,128,0xff00ff00) end
+if CassiopeiaMenu.Drawings.E:Value() then DrawCircle(GoS:myHeroPos().x, GoS:myHeroPos().y, GoS:myHeroPos().z,700,1,128,0xff00ff00) end
+if CassiopeiaMenu.Drawings.R:Value() then DrawCircle(GoS:myHeroPos().x, GoS:myHeroPos().y, GoS:myHeroPos().z,GetCastRange(myHero,_R),1,128,0xff00ff00) end
 
 end)
 
 addInterrupterCallback(function(target, spellType)
-  local RPred = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),math.huge,600,800,180,false,true)
-  if GoS:IsInDistance(target, 800) and IsFacing(target, 800) and CassiopeiaMenu.Misc.Interrupt:Value() and 100*GetCurrentHP(myHero)/GetMaxHP(myHero) <= CassiopeiaMenu.Misc.HP:Value() and CanUseSpell(myHero,_R) == READY and spellType == CHANELLING_SPELLS then
+  local RPred = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),math.huge,300,825,80*math.pi /180,false,true)
+  if GoS:IsInDistance(target, 825) and IsFacing(target, 800) and CassiopeiaMenu.Misc.Interrupt:Value() and 100*GetCurrentHP(myHero)/GetMaxHP(myHero) <= CassiopeiaMenu.Misc.HP:Value() and CanUseSpell(myHero,_R) == READY and spellType == CHANELLING_SPELLS then
   CastSkillShot(_R,RPred.PredPos.x,RPred.PredPos.y,RPred.PredPos.z)
   end
 end)
@@ -293,7 +283,6 @@ function IsFacing(targetFace,range,unit)
     end
 	end
 end
-
 
 function ValidtargetUnit(targetFace,range,unit)
     range = range or 25000
@@ -363,3 +352,67 @@ OnProcessSpell(function(Object,spellProc)
 		end
 	end
 end)
+
+-- Huge Credits To Inferno for MEC
+local GetOrigin = GetOrigin
+local SQRT = math.sqrt
+
+function TargetDist(point, target)
+    local origin = GetOrigin(target)
+    local dx, dz = origin.x-point.x, origin.z-point.z
+    return SQRT( dx*dx + dz*dz )
+end
+
+function ExcludeFurthest(point, tbl)
+    local removalId = 1
+    for i=2, #tbl do
+        if TargetDist(point, tbl[i]) > TargetDist(point, tbl[removalId]) then
+            removalId = i
+        end
+    end
+    
+    local newTable = {}
+    for i=1, #tbl do
+        if i ~= removalId then
+            newTable[#newTable+1] = tbl[i]
+        end
+    end
+    return newTable
+end
+
+function GetMEC(aoe_radius, listOfEntities, starTarget)
+    local average = {x=0, y=0, z=0, count = 0}
+    for i=1, #listOfEntities do
+        local ori = GetOrigin(listOfEntities[i])
+        average.x = average.x + ori.x
+        average.y = average.y + ori.y
+        average.z = average.z + ori.z
+        average.count = average.count + 1
+    end
+    if starTarget then
+        local ori = GetOrigin(starTarget)
+        average.x = average.x + ori.x
+        average.y = average.y + ori.y
+        average.z = average.z + ori.z
+        average.count = average.count + 1
+    end
+    average.x = average.x / average.count
+    average.y = average.y / average.count
+    average.z = average.z / average.count
+    
+    local targetsInRange = 0
+    for i=1, #listOfEntities do
+        if TargetDist(average, listOfEntities[i]) <= aoe_radius then
+            targetsInRange = targetsInRange + 1
+        end
+    end
+    if starTarget and TargetDist(average, starTarget) <= aoe_radius then
+        targetsInRange = targetsInRange + 1
+    end
+    
+    if targetsInRange == average.count then
+        return average
+    else
+        return GetMEC(aoe_radius, ExcludeFurthest(average, listOfEntities), starTarget)
+    end
+end
