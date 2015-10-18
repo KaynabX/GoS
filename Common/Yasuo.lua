@@ -3,8 +3,6 @@ require("Inspired")
 -- Global stuff
 KnockedUnits = {}
 Ignite = (GetCastName(myHero,SUMMONER_1):lower():find("summonerdot") and SUMMONER_1 or (GetCastName(myHero,SUMMONER_2):lower():find("summonerdot") and SUMMONER_2 or nil))
-target = GetCurrentTarget()
-unit = GetCurrentTarget()
 EnemyPos2 = GetOrigin(unit)
 
 OnLoop(function(myHero)
@@ -17,7 +15,9 @@ KillSteal()
 AutoUlt()
 AutoIgnite()
 JungleClear()
-if Yasuo.c.combo:Value() then
+target = GetCurrentTarget()
+unit = GetCurrentTarget()
+if IOW:Mode() == "Combo" then
 if GoS:ValidTarget(unit, 1200) then
   local QPred = GetPredictionForPlayer(GoS:myHeroPos(),unit,GetMoveSpeed(unit),1500,250,1025,90,false,false)
 if CanUseSpell(myHero, _Q) == READY and GoS:ValidTarget(unit, 475) and Yasuo.c.Q:Value() then

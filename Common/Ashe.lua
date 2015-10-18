@@ -1,193 +1,267 @@
-require('Inspired')
+if GetObjectName(myHero) ~= "Ashe" then return end
 
-PrintChat("ADC MAIN | Ashe loaded.")
-PrintChat("by Noddy")
+local AsheMenu = Menu("Ashe", "Ashe")
+AsheMenu:SubMenu("Combo", "Combo")
+AsheMenu.Combo:Boolean("Q", "Use Q", true)
+AsheMenu.Combo:Boolean("W", "Use W", true)
+AsheMenu.Combo:Boolean("R", "Use R", true)
+AsheMenu.Combo:Key("FireKey", "Ult Fire Key", string.byte("T"))
+AsheMenu.Combo:Boolean("Items", "Use Items", true)
+AsheMenu.Combo:Slider("myHP", "if HP % <", 50, 0, 100, 1)
+AsheMenu.Combo:Slider("targetHP", "if Target HP % >", 20, 0, 100, 1)
+AsheMenu.Combo:Boolean("QSS", "Use QSS", true)
+AsheMenu.Combo:Slider("QSSHP", "if HP % <", 75, 0, 100, 1)
 
-mainMenu = Menu("ADC MAIN | Ashe", "Ashe")
-mainMenu:SubMenu("Combo", "Combo")
-mainMenu.Combo:Boolean("useQ", "Use Q in combo", true)
-mainMenu.Combo:Boolean("useW", "Use W in combo", true)
-mainMenu.Combo:Boolean("useE", "Use E in combo", true)
-mainMenu.Combo:Boolean("useR", "Use R in combo", true)
-mainMenu.Combo:Key("Combo1", "Combo", string.byte(" "))
-------------------------------------------------------	
-mainMenu:SubMenu("Harass", "Harass")
-mainMenu.Harass:Boolean("useQ", "Use Q in harass", true)
-mainMenu.Harass:Boolean("useW", "Use W in harass", true)
-mainMenu.Harass:Slider("Mana","Mana", 60 , 0, 100, 1)
-mainMenu.Harass:Key("Harass1", "Harass", string.byte("C"))
-------------------------------------------------------	
-mainMenu:SubMenu("Killsteal", "Killsteal")
-mainMenu.Killsteal:Boolean("ksW", "Use W - KS", true)
-mainMenu.Killsteal:Boolean("ksR", "Use R - KS", true)
-------------------------------------------------------	
-mainMenu:SubMenu("Drawings", "Drawings")
-mainMenu.Drawings:Boolean("DrawDMG","Draw damage", true)
-mainMenu.Drawings:Boolean("DrawCombo","Draw R Combo range", true)
-mainMenu.Drawings:Slider("Quality","Circle Quality", 100 , 1, 255, 1)
-------------------------------------------------------
-mainMenu:SubMenu("Items", "Items")
-mainMenu.Items:Boolean("useCut", "Bilgewater Cutlass", true)
-mainMenu.Items:Boolean("useBork", "Blade of the Ruined King", true)
-mainMenu.Items:Boolean("useGhost", "Youmuu's Ghostblade", true)
-mainMenu.Items:Boolean("useRedPot", "Elixir of Wrath", true)
+AsheMenu:SubMenu("Harass", "Harass")
+AsheMenu.Harass:Boolean("Q", "Use Q", true)
+AsheMenu.Harass:Boolean("W", "Use W", true)
+AsheMenu.Harass:Slider("Mana", "if Mana % >", 30, 0, 80, 1)
+AsheMenu.Harass:Boolean("AutoW", "Auto W", true)
+AsheMenu.Harass:Slider("WMana", "if Mana % >", 50, 0, 80, 1)
 
-local baseSpeed = GetBaseAttackSpeed(GetMyHero())
-local global_ticks = 0
+AsheMenu:SubMenu("Killsteal", "Killsteal")
+AsheMenu.Killsteal:Boolean("W", "Killsteal with W", true)
+AsheMenu.Killsteal:Boolean("R", "Killsteal with R", false)
 
-OnLoop(function (myHero)
+AsheMenu:SubMenu("Misc", "Misc")
+AsheMenu.Misc:Boolean("AutoIgnite", "Auto Ignite", true)
+AsheMenu.Misc:Boolean("Autolvl", "Auto level", false)
+AsheMenu.Misc:List("Autolvltable", "Priority", 1, {"W-Q-E", "Q-W-E"})
 
-local myHeroPos = GetOrigin(myHero)
-local target = GetCurrentTarget()
+AsheMenu:SubMenu("LaneClear", "LaneClear")
+AsheMenu.LaneClear:Boolean("Q", "Use Q", false)
+AsheMenu.LaneClear:Boolean("W", "Use W", false)
+AsheMenu.LaneClear:Slider("Mana", "if Mana % >", 30, 0, 80, 1)
 
--- Items
-local CutBlade = GetItemSlot(myHero,3144)
-local bork = GetItemSlot(myHero,3153)
-local ghost = GetItemSlot(myHero,3142)
-local redpot = GetItemSlot(myHero,2140)
+AsheMenu:SubMenu("JungleClear", "JungleClear")
+AsheMenu.JungleClear:Boolean("Q", "Use Q", true)
+AsheMenu.JungleClear:Boolean("W", "Use W", true)
+AsheMenu.JungleClear:Slider("Mana", "if Mana % >", 30, 0, 80, 1)
 
--- Use Items
-if mainMenu.Combo.Combo1:Value() then
-	if CutBlade >= 1 and GoS:ValidTarget(target,550) and mainMenu.Items.useCut:Value() then
-		if CanUseSpell(myHero,GetItemSlot(myHero,3144)) == READY then
-			CastTargetSpell(target, GetItemSlot(myHero,3144))
-		end	
-	elseif bork >= 1 and GoS:ValidTarget(target,550) and (GetMaxHP(myHero) / GetCurrentHP(myHero)) >= 1.25 and mainMenu.Items.useBork:Value() then 
-		if CanUseSpell(myHero,GetItemSlot(myHero,3153)) == READY then
-			CastTargetSpell(target,GetItemSlot(myHero,3153))
-		end
+AsheMenu:SubMenu("Drawings", "Drawings")
+AsheMenu.Drawings:Boolean("W", "Draw W Range", true)
+
+local InterruptMenu = Menu("Interrupt (R)", "Interrupt")
+
+CHANELLING_SPELLS = {
+    ["CaitlynAceintheHole"]                   = {Name = "Caitlyn",      Spellslot = _R},
+    ["Drain"]                                              = {Name = "FiddleSticks", Spellslot = _W},
+    ["Crowstorm"]                                    = {Name = "FiddleSticks", Spellslot = _R},
+    ["GalioIdolOfDurand"]                       = {Name = "Galio",        Spellslot = _R},
+    ["FallenOne"]                                      = {Name = "Karthus",      Spellslot = _R},
+    ["KatarinaR"]                                      = {Name = "Katarina",     Spellslot = _R},
+    ["LucianR"]                                         = {Name = "Lucian",       Spellslot = _R},
+    ["AlZaharNetherGrasp"]                   = {Name = "Malzahar",     Spellslot = _R},
+    ["MissFortuneBulletTime"]              = {Name = "MissFortune",  Spellslot = _R},
+    ["AbsoluteZero"]                                = {Name = "Nunu",         Spellslot = _R},                        
+    ["Pantheon_GrandSkyfall_Jump"]  = {Name = "Pantheon",     Spellslot = _R},
+    ["ShenStandUnited"]                         = {Name = "Shen",         Spellslot = _R},
+    ["UrgotSwap2"]                                  = {Name = "Urgot",        Spellslot = _R},
+    ["VarusQ"]                                           = {Name = "Varus",        Spellslot = _Q},
+    ["InfiniteDuress"]                               = {Name = "Warwick",      Spellslot = _R} 
+}
+
+
+GoS:DelayAction(function()
+
+  local str = {[_Q] = "Q", [_W] = "W", [_E] = "E", [_R] = "R"}
+
+  for i, spell in pairs(CHANELLING_SPELLS) do
+    for _,k in pairs(GoS:GetEnemyHeroes()) do
+        if spell["Name"] == GetObjectName(k) then
+        InterruptMenu:Boolean(GetObjectName(k).."Inter", "On "..GetObjectName(k).." "..(type(spell.Spellslot) == 'number' and str[spell.Spellslot]), true)
+        end
+    end
+  end
+		
+end, 1)
+
+OnProcessSpell(function(unit, spell)
+  if unit and spell and spell.name then
+    if GetObjectType(unit) == Obj_AI_Hero and GetTeam(unit) ~= GetTeam(GetMyHero()) and CanUseSpell(myHero, _R) == READY then
+      if CHANELLING_SPELLS[spell.name] then
+      	local RPred = GetPredictionForPlayer(GoS:myHeroPos(),unit,GetMoveSpeed(unit),1600,250,1000,130,false,true)
+        if GoS:IsInDistance(unit, 1000) and GetObjectName(unit) == CHANELLING_SPELLS[spell.name].Name and InterruptMenu[GetObjectName(unit).."Inter"]:Value() and RPred.HitChance == 1 then 
+        CastSkillShot(_R, GetOrigin(unit).x, GetOrigin(unit).y, GetOrigin(unit).z)
+        end
+      end
+    end
+  end
+end)
+
+OnLoop(function(myHero)
+
+    if IOW:Mode() == "Combo" then
+	
+	local target = GetCurrentTarget()
+	local WPred = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),2000,250,1200,50,true,true)
+        local RPred = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),1600,250,2000,130,false,true)
+		
+	if CanUseSpell(myHero, _Q) == READY and GotBuff(myHero, "asheqcastready") > 0 and GoS:ValidTarget(target, 700) and AsheMenu.Combo.Q:Value() then
+        CastSpell(_Q)
+        end
+						
+        if CanUseSpell(myHero, _W) == READY and WPred.HitChance == 1 and GoS:ValidTarget(target, 1200) and AsheMenu.Combo.W:Value() then
+        CastSkillShot(_W,WPred.PredPos.x,WPred.PredPos.y,WPred.PredPos.z)
+        end
+						
+        if CanUseSpell(myHero, _R) == READY and RPred.HitChance == 1 and GoS:ValidTarget(target, 2000) and 100*GetCurrentHP(target)/GetMaxHP(target) < 50 and AsheMenu.Combo.R:Value() then
+        CastSkillShot(_R,RPred.PredPos.x,RPred.PredPos.y,RPred.PredPos.z)
+	end
+		
+	if GetItemSlot(myHero,3140) > 0 and AsheMenu.Combo.QSS:Value() and GotBuff(myHero, "rocketgrab2") > 0 or GotBuff(myHero, "charm") > 0 or GotBuff(myHero, "fear") > 0 or GotBuff(myHero, "flee") > 0 or GotBuff(myHero, "snare") > 0 or GotBuff(myHero, "taunt") > 0 or GotBuff(myHero, "suppression") > 0 or GotBuff(myHero, "stun") > 0 or GotBuff(myHero, "zedultexecute") > 0 or GotBuff(myHero, "summonerexhaust") > 0 and 100*GetCurrentHP(myHero)/GetMaxHP(myHero) < AsheMenu.Combo.QSSHP:Value() then
+        CastTargetSpell(myHero, GetItemSlot(myHero,3140))
+        end
+
+        if GetItemSlot(myHero,3139) > 0 and AsheMenu.Combo.QSS:Value() and GotBuff(myHero, "rocketgrab2") > 0 or GotBuff(myHero, "charm") > 0 or GotBuff(myHero, "fear") > 0 or GotBuff(myHero, "flee") > 0 or GotBuff(myHero, "snare") > 0 or GotBuff(myHero, "taunt") > 0 or GotBuff(myHero, "suppression") > 0 or GotBuff(myHero, "stun") > 0 or GotBuff(myHero, "zedultexecute") > 0 or GotBuff(myHero, "summonerexhaust") > 0 and 100*GetCurrentHP(myHero)/GetMaxHP(myHero) < AsheMenu.Combo.QSSHP:Value() then
+        CastTargetSpell(myHero, GetItemSlot(myHero,3139))
+        end
+    end
+
+    if IOW:Mode() == "Harass" and 100*GetCurrentMana(myHero)/GetMaxMana(myHero) >= AsheMenu.Harass.Mana:Value() then 
+    
+        local target = GetCurrentTarget()
+        local WPred = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),2000,250,1200,50,true,true)	
+		
+	if CanUseSpell(myHero, _Q) == READY and GotBuff(myHero, "asheqcastready") > 0 and GoS:ValidTarget(target, 700) and AsheMenu.Harass.Q:Value() then
+        CastSpell(_Q)
+        end
+						
+        if CanUseSpell(myHero, _W) == READY and WPred.HitChance == 1 and GoS:ValidTarget(target, 1200) and AsheMenu.Harass.W:Value() then
+        CastSkillShot(_W,WPred.PredPos.x,WPred.PredPos.y,WPred.PredPos.z)
+	end
+		
+    end
+
+    if AsheMenu.Combo.FireKey:Value() then
+      
+      local target = GetCurrentTarget()
+      local RPred = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),1600,250,3000,130,false,true)
+
+      if CanUseSpell(myHero,_R) == READY and GoS:ValidTarget(target, 3000) and RPred.HitChance == 1 then 
+         CastSkillShot(_R,RPred.PredPos.x,RPred.PredPos.y,RPred.PredPos.z)
+      end  
+
+    end
+
+      if AsheMenu.Harass.AutoW:Value() and 100*GetCurrentMana(myHero)/GetMaxMana(myHero) >= AsheMenu.Harass.WMana:Value() then 
+    
+        local target = GetCurrentTarget()
+        local WPred = GetPredictionForPlayer(GoS:myHeroPos(),target,GetMoveSpeed(target),2000,250,1200,50,true,true)
+        if CanUseSpell(myHero, _W) == READY and GoS:ValidTarget(target, 1200) and WPred.HitChance == 1 and GotBuff(myHero, "Recall") < 1 and GotBuff(myHero, "SummonerTeleport") < 1 and GotBuff(myHero, "RecallImproved") < 1 then
+        CastSkillShot(_W,WPred.PredPos.x,WPred.PredPos.y,WPred.PredPos.z)
 	end
 
-	if ghost >= 1 and GoS:ValidTarget(target,550) and mainMenu.Items.useGhost:Value() then
-		if CanUseSpell(myHero,GetItemSlot(myHero,3142)) == READY then
-			CastSpell(GetItemSlot(myHero,3142))
-		end
+      end
+
+for i,enemy in pairs(GoS:GetEnemyHeroes()) do
+	
+	local WPred = GetPredictionForPlayer(GoS:myHeroPos(),enemy,GetMoveSpeed(enemy),2000,250,1200,50,true,true)
+	local RPred = GetPredictionForPlayer(GoS:myHeroPos(),enemy,GetMoveSpeed(enemy),1600,250,3000,130,false,true)
+	
+      if IOW:Mode() == "Combo" then	
+	if GetItemSlot(myHero,3153) > 0 and AsheMenu.Combo.Items:Value() and GoS:ValidTarget(enemy, 550) and 100*GetCurrentHP(myHero)/GetMaxHP(myHero) < AsheMenu.Combo.myHP:Value() and 100*GetCurrentHP(enemy)/GetMaxHP(enemy) > AsheMenu.Combo.targetHP:Value() then
+        CastTargetSpell(enemy, GetItemSlot(myHero,3153))
+        end
+
+        if GetItemSlot(myHero,3144) > 0 and AsheMenu.Combo.Items:Value() and GoS:ValidTarget(enemy, 550) and 100*GetCurrentHP(myHero)/GetMaxHP(myHero) < AsheMenu.Combo.myHP:Value() and 100*GetCurrentHP(enemy)/GetMaxHP(enemy) > AsheMenu.Combo.targetHP:Value() then
+        CastTargetSpell(enemy, GetItemSlot(myHero,3144))
+        end
+
+        if GetItemSlot(myHero,3142) > 0 and AsheMenu.Combo.Items:Value() and GoS:ValidTarget(enemy, 600) then
+        CastTargetSpell(myHero, GetItemSlot(myHero,3142))
+        end	
+      end
+      
+	if Ignite and AsheMenu.Misc.AutoIgnite:Value() then
+          if CanUseSpell(myHero, Ignite) == READY and 20*GetLevel(myHero)+50 > GetCurrentHP(enemy)+GetDmgShield(enemy)+GetHPRegen(enemy)*2.5 and GoS:ValidTarget(enemy, 600) then
+          CastTargetSpell(enemy, Ignite)
+          end
 	end
 	
-	if redpot >= 1 and GoS:ValidTarget(target,550) and mainMenu.Items.useRedPot:Value() then
-		if CanUseSpell(myHero,GetItemSlot(myHero,2140)) == READY then
-			CastSpell(GetItemSlot(myHero,2140))
-		end
+	if CanUseSpell(myHero, _W) == READY and WPred.HitChance == 1 and GoS:ValidTarget(enemy, 1200) and AsheMenu.Killsteal.W:Value() and GetCurrentHP(enemy)+GetDmgShield(enemy) < GoS:CalcDamage(myHero, enemy, 15*GetCastLevel(myHero,_W)+5+GetBaseDamage(myHero), 0) then 
+	CastSkillShot(_W,WPred.PredPos.x,WPred.PredPos.y,WPred.PredPos.z)
 	end
-end
-
--- Draw
-if mainMenu.Drawings.DrawCombo:Value() and CanUseSpell(myHero,_R) == READY and GoS:ValidTarget(target,2000) then
-	DrawCircle(GetOrigin(myHero),1200,0,mainMenu.Drawings.Quality:Value(),ARGB(100,33,139,6))
-end
-
--- DMG
-if mainMenu.Combo.useR:Value() then
-	if CanUseSpell(myHero,_R) == READY and GoS:ValidTarget(target, 2000) then
-		local aaDMG = GoS:CalcDamage(myHero,target,((baseSpeed * GetAttackSpeed(myHero)) * (GetBaseDamage(myHero) + GetBonusDmg(myHero))),0) * 1.5
-		local rDMG = GoS:CalcDamage(myHero,target,0, 175*GetCastLevel(myHero,_R)+ 75 + GetBonusAP(myHero))
+		  
+	if CanUseSpell(myHero, _R) == READY and RPred.HitChance == 1 and GoS:ValidTarget(enemy, 3000) and AsheMenu.Killsteal.R:Value() and GetCurrentHP(enemy)+GetMagicShield(enemy)+GetDmgShield(enemy) < GoS:CalcDamage(myHero, enemy, 0, 175*GetCastLevel(myHero,_R)+75 + GetBonusAP(myHero)) then
+        CastSkillShot(_R,RPred.PredPos.x,RPred.PredPos.y,RPred.PredPos.z)
+	end
 		
-			if CanUseSpell(myHero,_W) == READY and mainMenu.Combo.useW:Value() and GoS:ValidTarget(target, 2000) then
-				wDMG = GoS:CalcDamage(myHero,target,15*GetCastLevel(myHero,_W)+5+(GetBaseDamage(myHero) + GetBonusDmg(myHero)),0)
-			elseif CanUseSpell(myHero,_W) ~= READY then
-				wDMG = 0
-			end
+end
+
+for _,minion in pairs(GoS:GetAllMinions(MINION_ENEMY)) do
+
+                if IOW:Mode() == "LaneClear" and 100*GetCurrentMana(myHero)/GetMaxMana(myHero) >= AsheMenu.LaneClear.Mana:Value() then
+
+		  if CanUseSpell(myHero,_Q) == READY and AsheMenu.LaneClear.Q:Value() and GoS:ValidTarget(minion, 700) and GotBuff(myHero, "asheqcastready") > 0 then
+                  CastSpell(_Q)
+                  end
+
+                  if CanUseSpell(myHero,_W) == READY and AsheMenu.LaneClear.W:Value() then
+                    local BestPos, BestHit = GetFarmPosition(1200, 300)
+		    if BestPos and BestHit > 0 then
+	            CastSkillShot(_W, BestPos.x, BestPos.y, BestPos.z)
+		    end
+                  end  
+
+	        end
+	        
+end
+
+for _,mob in pairs(GoS:GetAllMinions(MINION_JUNGLE)) do
 		
-		DPS = (aaDMG*(GetCritChance(myHero)+1.1)) + rDMG + wDMG
+        if IOW:Mode() == "LaneClear" and 100*GetCurrentMana(myHero)/GetMaxMana(myHero) >= AsheMenu.JungleClear.Mana:Value() then
+		local mobPos = GetOrigin(mob)
+
+                if CanUseSpell(myHero,_Q) == READY and AsheMenu.JungleClear.Q:Value() and GoS:ValidTarget(mob, 700) and GotBuff(myHero, "asheqcastready") > 0 then
+                CastSpell(_Q)
+                end		
+
+		if CanUseSpell(myHero, _W) == READY and AsheMenu.JungleClear.W:Value() and GoS:ValidTarget(mob, 1200) then
+		CastSkillShot(_W,mobPos.x, mobPos.y, mobPos.z)
+		end
 		
-	if mainMenu.Drawings.DrawDMG:Value() then
-		DrawDmgOverHpBar(target,GetCurrentHP(target),DPS,0,ARGB(255,33,139,6))
-	end
-	else
-		DPS = 0
-	end
+        end
 end
 
--- E Pos
-if mainMenu.Combo.useE:Value() then
-Ticker = GetTickCount()
-	if (global_ticks + 10) < Ticker then
-	
-		GoS:DelayAction( function ()
-			if not IsVisible(target) then
-				targetPos = GetOrigin(target)
-			end		
-		 end , 10) 
-		global_ticks = Ticker
-
-	end	
+if AsheMenu.Misc.Autolvl:Value() then  
+    if AsheMenu.Misc.Autolvltable:Value() == 1 then leveltable = {_W, _Q, _E, _W, _W, _R, _W, _Q, _W , _Q, _R, _Q, _Q, _E, _E, _R, _E, _E}
+    elseif AsheMenu.Misc.Autolvltable:Value() == 2 then leveltable = {_W, _Q, _E, _Q, _Q, _R, _Q, _W, _Q, _W, _R, _W, _W, _E, _E, _R, _E, _E}
+    end
+LevelSpell(leveltable[GetLevel(myHero)])
 end
 
--- Combo
-if mainMenu.Combo.Combo1:Value() then
-
--- Ult 
-if mainMenu.Combo.useR:Value() and CanUseSpell(myHero,_R) == READY then
-	if GoS:ValidTarget(target,1200) and IsTargetable(target) and GetCurrentHP(target) + GetDmgShield(target) + GetMagicShield(target) <= DPS and GotBuff(target,"BlackShield") == 0 then
-		local RPred = GetPredictionForPlayer(myHeroPos,target,GetMoveSpeed(target),2000,250,1500,70,false,false)
-			if RPred.HitChance == 1 then
-				CastSkillShot(_R,RPred.PredPos.x,RPred.PredPos.y,RPred.PredPos.z)
-			end
-	end			
-end
-
--- W
-if CanUseSpell(myHero,_W) == READY and mainMenu.Combo.useW:Value() and GoS:ValidTarget(target,1200) and IsTargetable(target) then
-	local WPred = GetPredictionForPlayer(myHeroPos,target,GetMoveSpeed(target),1600,250,1200,20,true,false)
-		if WPred.HitChance == 1 then
-			CastSkillShot(_W,WPred.PredPos.x,WPred.PredPos.y,WPred.PredPos.z)
-		end
-end
-
--- Q
-if CanUseSpell(myHero,_Q) == READY and mainMenu.Combo.useQ:Value() and GoS:ValidTarget(target,650) and IsTargetable(target) and GotBuff(myHero,"asheqcastready") == 5 then
-	CastSpell(_Q)
-end
-
--- E
-if CanUseSpell(myHero,_E) == READY and mainMenu.Combo.useE:Value() and targetPos ~= nil and GoS:GetDistance(targetPos) < 1400 then
-	CastSkillShot(_E,targetPos)
-	targetPos = nil
-end
-
-end -- Combo
-
--- Harass
-if mainMenu.Harass.Harass1:Value() and 100*GetCurrentMana(myHero)/GetMaxMana(myHero) >= mainMenu.Harass.Mana:Value() then
--- W
-if CanUseSpell(myHero,_W) == READY and mainMenu.Harass.useW:Value() and GoS:ValidTarget(target,1200) and IsTargetable(target) then
-	local WPred = GetPredictionForPlayer(myHeroPos,target,GetMoveSpeed(target),1600,250,1200,20,true,false)
-		if WPred.HitChance == 1 then
-			CastSkillShot(_W,WPred.PredPos.x,WPred.PredPos.y,WPred.PredPos.z)
-		end
-end
-
--- Q
-if CanUseSpell(myHero,_Q) == READY and mainMenu.Harass.useQ:Value() and GoS:ValidTarget(target,650) and IsTargetable(target) and GotBuff(myHero,"asheqcastready") == 5 then
-	CastSpell(_Q)
-end
-
-end -- Harass
-
--- KSW
-if mainMenu.Killsteal.ksW:Value() then
-for i,enemy in pairs(GoS:GetEnemyHeroes()) do
-	if CanUseSpell(myHero,_W) == READY and IsTargetable(enemy) and GoS:ValidTarget(enemy,1200) and GetCurrentHP(enemy)+GetDmgShield(enemy) < GoS:CalcDamage(myHero,target,15*GetCastLevel(myHero,_W)+5+(GetBaseDamage(myHero) + GetBonusDmg(myHero)),0) then
-		local WPred = GetPredictionForPlayer(myHeroPos,target,GetMoveSpeed(target),1600,250,1200,20,true,false)
-			if WPred.HitChance == 1 then
-				CastSkillShot(_W,WPred.PredPos.x,WPred.PredPos.y,WPred.PredPos.z)
-			end	
-	end
-end
-end
-
--- KSR
-if mainMenu.Killsteal.ksR:Value() then
-for i,enemy in pairs(GoS:GetEnemyHeroes()) do
-	if CanUseSpell(myHero,_R) == READY and IsTargetable(enemy) and not GoS:IsInDistance(enemy, 1200) and GoS:ValidTarget(enemy,3000) and GetCurrentHP(enemy)+GetMagicShield(enemy) < GoS:CalcDamage(myHero,enemy,0, 175*GetCastLevel(myHero,_R)+ 75 + GetBonusAP(myHero)) then
-		local RPred = GetPredictionForPlayer(myHeroPos,enemy,GetMoveSpeed(enemy),2000,250,20000,70,false,false)
-			if RPred.HitChance == 1 then
-				CastSkillShot(_R,RPred.PredPos.x,RPred.PredPos.y,RPred.PredPos.z)
-			end
-	end
-end
-end
-
+if AsheMenu.Drawings.W:Value() then DrawCircle(GoS:myHeroPos().x, GoS:myHeroPos().y, GoS:myHeroPos().z,1200,1,128,0xff00ff00) end
 
 end)
 
+GoS:AddGapcloseEvent(_R, 1000, false)
+
+function GetFarmPosition(range, width)
+  local BestPos 
+  local BestHit = 0
+  local objects = minionManager.objects
+  for i, object in pairs(objects) do
+  	if GetOrigin(object) ~= nil and IsObjectAlive(object) and GetTeam(object) ~= GetTeam(myHero) then
+	  	local hit = CountObjectsNearPos(Vector(object), range, width, objects)
+	    if hit > BestHit and GoS:GetDistanceSqr(Vector(object)) < range * range then
+	      BestHit = hit
+	      BestPos = Vector(object)
+	      if BestHit == #objects then
+	        break
+	      end
+	    end
+	end
+  end
+  return BestPos, BestHit
+end
+
+function CountObjectsNearPos(pos, range, radius, objects)
+  local n = 0
+  for i, object in pairs(objects) do
+    if IsObjectAlive(object) and GoS:GetDistanceSqr(pos, Vector(object)) <= radius^2 then
+      n = n + 1
+    end
+  end
+  return n
+end
