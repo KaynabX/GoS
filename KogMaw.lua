@@ -1,19 +1,3 @@
---[[                _   _ _ _                   __  __            _     _            
-     /\        | | (_) | |                 |  \/  |          | |   (_)           
-    /  \   _ __| |_ _| | | ___ _ __ _   _  | \  / | __ _  ___| |__  _ _ __   ___ 
-   / /\ \ | '__| __| | | |/ _ \ '__| | | | | |\/| |/ _` |/ __| '_ \| | '_ \ / _ \
-  / ____ \| |  | |_| | | |  __/ |  | |_| | | |  | | (_| | (__| | | | | | | |  __/
- /_/ __ \_\_|   \__|_|_|_|\___|_|   \__, | |_|  |_|\__,_|\___|_| |_|_|_| |_|\___|
- | |/ /            |  \/  |          __/ |                                       
- | ' / ___   __ _  | \  / | __ ___  |___/_                                       
- |  < / _ \ / _` | | |\/| |/ _` \ \ /\ / /                                       
- | . \ (_) | (_| | | |  | | (_| |\ V  V /                                        
- |_|\_\___/ \__, | |_|  |_|\__,_| \_/\_/                                         
-             __/ |                                                               
-            |___/                                    
- ]]--
-
-
 if GetObjectName(GetMyHero()) ~= "KogMaw" then return end
 
 if not pcall( require, "Inspired" ) then PrintChat("You are missing Inspired.lua - Go download it and save it in Common!") return end
@@ -30,7 +14,7 @@ PrintChat(textTable[3])
 PrintChat(textTable[4])
 PrintChat(textTable[5])
 
-KogMawMenu = MenuConfig("VormitMachine", "KogMaw")
+local KogMawMenu = MenuConfig("VormitMachine", "KogMaw")
 
 KogMawMenu:Menu("Combo", "Combo")
 KogMawMenu.Combo:Boolean("Q", "Use Q", true)
@@ -59,12 +43,13 @@ KogMawMenu.Items:Boolean("BoTrK", "Use Botrk", true)
 KogMawMenu.Items:Boolean("Cutlass", "Use Cutlass", true)
 KogMawMenu.Items:Slider("III", "Use BoTrk or Cutlass when Health", 40, 1, 100, 1)
 
-KogMawMenu:TargetSelector("ts", "Target Selector",  DAMAGE_MAGICAL, 1200, TARGET_LESS_CAST)
+ts = TargetSelector(GetRange(myHero), TARGET_LESS_CAST, DAMAGE_PHYSICAL)
+KogMawMenu:TargetSelector("ts", "Target Selector", ts)
 
 OnTick(function(myHero)
-   target = KogMawMenu.ts:GetTarget()
+   local target = ts:GetTarget()
    origin = GetOrigin(target)
-   local QPred = GetPredictionForPlayer(myHeroPos(),target,GetMoveSpeed(target),1650,250,1200,70,true,true)
+   local QPred = GetPredictionForPlayer(myHeroPos(),target,GetMoveSpeed(target),1650,250,1200,70,true,false)
    local EPred = GetPredictionForPlayer(myHeroPos(),target,GetMoveSpeed(target),1400,250,1360,120,false,true)
    local RPred = GetPredictionForPlayer(myHeroPos(),target,GetMoveSpeed(target),math.huge,1200,1800,150,false,false)
    local botrk = GetItemSlot(myHero,3153)
@@ -79,39 +64,39 @@ OnTick(function(myHero)
 end) --Ends the OnLoop
 
 function Combo()
-   if CanUseSpell(myHero,_Q) == READY and GetPercentMP(myHero) >= KogMawMenu.Mana.Q:Value() and IsObjectAlive(target) and ValidTarget(target, 1200) and QPred.HitChance == 1 and KogMawMenu.Combo.Q:Value() and KogMawMenu.Combo.Combo1:Value() then
+   if isReady(_Q) and GetPercentMP(myHero) >= KogMawMenu.Mana.Q:Value() and IsObjectAlive(target) and ValidTarget(target, 1200) and QPred.HitChance == 1 and KogMawMenu.Combo.Q:Value() and KogMawMenu.Combo.Combo1:Value() then
       CastSkillShot(_Q,QPred.PredPos.x,QPred.PredPos.y,QPred.PredPos.z)
    end
 
-   if CanUseSpell(myHero,_W) == READY and KogMawMenu.Combo.Combo1:Value() and KogMawMenu.Combo.W:Value() and ValidTarget(target, 600) then
+   if isReady(_W) and KogMawMenu.Combo.Combo1:Value() and KogMawMenu.Combo.W:Value() and ValidTarget(target, 600) then
       CastSpell(_W)
    end
 
-   if CanUseSpell(myHero,_E) == READY and GetPercentMP(myHero) >= KogMawMenu.Mana.E:Value() and KogMawMenu.Combo.E:Value() and KogMawMenu.Combo.Combo1:Value() and ValidTarget(target, 1360) and EPred.HitChance == 1 then
+   if isReady(_E) and GetPercentMP(myHero) >= KogMawMenu.Mana.E:Value() and KogMawMenu.Combo.E:Value() and KogMawMenu.Combo.Combo1:Value() and ValidTarget(target, 1360) and EPred.HitChance == 1 then
       CastSkillShot(_E,EPred.PredPos.x,EPred.PredPos.y,EPred.PredPos.z)
    end
 
-   if CanUseSpell(myHero,_R) == READY and GetPercentMP(myHero) >= KogMawMenu.Mana.R:Value() and RPred.HitChance == 1 and KogMawMenu.Combo.R:Value() and KogMawMenu.Combo.Combo1:Value() and ValidTarget(target, 1800) then
+   if isReady(_R) and GetPercentMP(myHero) >= KogMawMenu.Mana.R:Value() and RPred.HitChance == 1 and KogMawMenu.Combo.R:Value() and KogMawMenu.Combo.Combo1:Value() and ValidTarget(target, 1800) then
       CastSkillShot(_R,RPred.PredPos.x,RPred.PredPos.y,RPred.PredPos.z)
    end
 end --Ends the Combo function
 
 function KS()
-   local target = GetCurrentTarget()
+   local target = ts:GetTarget()
    for i,enemy in pairs(GetEnemyHeroes()) do
       local QPred = GetPredictionForPlayer(myHeroPos(),enemy,GetMoveSpeed(enemy),1650,250,1200,70,true,true)
       local EPred = GetPredictionForPlayer(myHeroPos(),enemy,GetMoveSpeed(enemy),1400,250,1360,120,false,true)
       local RPred = GetPredictionForPlayer(myHeroPos(),enemy,GetMoveSpeed(enemy),math.huge,1200,1800,150,false,false)
 
-      if CanUseSpell(myHero,_Q) == READY and KogMawMenu.Misc.KSQ:Value() and ValidTarget(enemy, 1200) and GetCurrentHP(enemy) < CalcDamage(myHero, enemy, 0, (50*GetCastLevel(myHero,_Q) + 30+ 0.5*(GetBonusAP(myHero)))) then
+      if isReady(_Q) == READY and KogMawMenu.Misc.KSQ:Value() and ValidTarget(enemy, 1200) and GetCurrentHP(enemy) < CalcDamage(myHero, enemy, 0, (50*GetCastLevel(myHero,_Q) + 30+ 0.5*(GetBonusAP(myHero)))) then
          CastSkillShot(_Q,QPred.PredPos.x,QPred.PredPos.y,QPred.PredPos.z)
       end
 
-      if CanUseSpell(myHero,_E) == READY and KogMawMenu.Misc.KSE:Value() and ValidTarget(enemy, 1360) and GetCurrentHP(enemy) < CalcDamage(myHero, enemy, 0, (50*GetCastLevel(myHero,_E) + 10 + 0.7*(GetBonusAP(myHero)))) then
+      if isReady(_E) and KogMawMenu.Misc.KSE:Value() and ValidTarget(enemy, 1360) and GetCurrentHP(enemy) < CalcDamage(myHero, enemy, 0, (50*GetCastLevel(myHero,_E) + 10 + 0.7*(GetBonusAP(myHero)))) then
          CastSpell(_W)
       end
 
-      if CanUseSpell(myHero,_R) == READY and KogMawMenu.Misc.KSR:Value() and ValidTarget(enemy, 1800) and GetCurrentHP(enemy) < CalcDamage(myHero, enemy, 0, (40*GetCastLevel(myHero,_R) + 40 + 0.5*(GetBaseDamage(myHero) + GetBonusDmg(myHero) + 0.3*(GetBonusAP(myHero)))),0) then
+      if isReady(_R) and KogMawMenu.Misc.KSR:Value() and ValidTarget(enemy, 1800) and GetCurrentHP(enemy) < CalcDamage(myHero, enemy, 0, (40*GetCastLevel(myHero,_R) + 40 + 0.5*(GetBaseDamage(myHero) + GetBonusDmg(myHero) + 0.3*(GetBonusAP(myHero)))),0) then
          CastSkillShot(_R,RPred.PredPos.x,RPred.PredPos.y,RPred.PredPos.z)
       end
    end
@@ -161,5 +146,5 @@ function Items()
             CastSpell(GetItemSlot(myHero,3142))
          end
       end
-   end --Ends Function Items
-end
+   end
+end --End function Items
