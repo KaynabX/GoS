@@ -1,0 +1,182 @@
+return {
+	["Menu_Base"] = {
+		["y"] = -5,
+		["x"] = 15,
+		["width"] = 200,
+	},
+	["Perma_Show"] = {
+		["y"] = 400,
+		["x"] = 15,
+	},
+	["DarkTeam"] = {
+		["Misc"] = {
+			["fuego"] = {
+				["value"] = true,
+			},
+			["es3"] = {
+				["value"] = true,
+			},
+			["poderes"] = {
+				["value"] = true,
+			},
+		},
+		["Drawings"] = {
+			["es2"] = {
+				["value"] = true,
+			},
+			["dp"] = {
+				["value"] = 255,
+			},
+			["R"] = {
+				["value"] = true,
+			},
+			["E"] = {
+				["value"] = false,
+			},
+			["W"] = {
+				["value"] = false,
+			},
+			["Q"] = {
+				["value"] = true,
+			},
+		},
+		["Combo"] = {
+			["info1"] = {
+			},
+		},
+		["lh"] = {
+			["ms"] = {
+				["value"] = 85,
+			},
+			["lhq"] = {
+				["value"] = true,
+			},
+		},
+		["lc"] = {
+			["lr"] = {
+				["value"] = false,
+			},
+			["le"] = {
+				["value"] = true,
+			},
+			["ms1"] = {
+				["value"] = 85,
+			},
+			["lw"] = {
+				["value"] = true,
+			},
+			["lq"] = {
+				["value"] = true,
+			},
+		},
+		["KS"] = {
+			["es1"] = {
+				["value"] = true,
+			},
+			["AE"] = {
+				["value"] = true,
+			},
+			["AQ"] = {
+				["value"] = true,
+			},
+			["AW"] = {
+				["value"] = true,
+			},
+		},
+		["jc"] = {
+			["ms2"] = {
+				["value"] = 85,
+			},
+			["jw"] = {
+				["value"] = true,
+			},
+			["je"] = {
+				["value"] = true,
+			},
+			["jq"] = {
+				["value"] = true,
+			},
+			["jr"] = {
+				["value"] = false,
+			},
+		},
+	},
+	["MenuConfig"] = {
+		["Show"] = {
+			["value"] = false,
+		},
+		["MenuKey"] = {
+			["key"] = 16,
+			["isToggle"] = false,
+		},
+		["ontop"] = {
+			["value"] = false,
+		},
+		["ps"] = {
+			["value"] = false,
+		},
+		["Inf"] = {
+		},
+		["Width"] = {
+			["value"] = 2,
+		},
+	},
+	["IOWTristana"] = {
+	},
+	["Tristana"] = {
+	},
+	["IOWRyze"] = {
+		["ts"] = {
+			["focus"] = false,
+			["mode"] = 1,
+		},
+		["drawcircle"] = {
+			["value"] = true,
+		},
+		["lcm"] = {
+			["value"] = 1,
+		},
+		["circlequal"] = {
+			["value"] = 4,
+		},
+		["circlecol"] = {
+			["color"] = {
+				["a"] = 255,
+				["r"] = 255,
+				["g"] = 255,
+				["b"] = 255,
+			},
+		},
+		["stop"] = {
+			["value"] = 65,
+		},
+		["h"] = {
+			["Combo"] = {
+				["key"] = 32,
+				["isToggle"] = false,
+			},
+			["Harass"] = {
+				["key"] = 67,
+				["isToggle"] = false,
+			},
+			["LastHit"] = {
+				["key"] = 88,
+				["isToggle"] = false,
+			},
+			["LaneClear"] = {
+				["key"] = 86,
+				["isToggle"] = false,
+			},
+		},
+		["space"] = {
+		},
+		["sticky"] = {
+			["value"] = false,
+		},
+		["Humanizer"] = {
+			["value"] = true,
+		},
+		["version"] = {
+		},
+	},
+}
