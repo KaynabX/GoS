@@ -1,12 +1,890 @@
 return {
-	["Menu_Base"] = {
-		["y"] = -5,
-		["x"] = 15,
-		["width"] = 200,
+	["Zilean"] = {
+		["Items"] = {
+			["PotionMP"] = {
+				["PotMP"] = {
+					["value"] = false,
+				},
+				["CheckMP"] = {
+					["value"] = 45,
+				},
+			},
+			["PotionHP"] = {
+				["CheckHP"] = {
+					["value"] = 50,
+				},
+				["PotHP"] = {
+					["value"] = false,
+				},
+			},
+		},
+		["Draws"] = {
+			["DrawsEb"] = {
+				["value"] = true,
+			},
+			["DrawE"] = {
+				["value"] = true,
+			},
+			["DrawQ"] = {
+				["value"] = true,
+			},
+			["DrawText"] = {
+				["value"] = true,
+			},
+			["QualiDraw"] = {
+				["value"] = 110,
+			},
+			["DrawR"] = {
+				["value"] = true,
+			},
+		},
+		["AtSpell"] = {
+			["ATSE"] = {
+				["KeyE"] = {
+					["key"] = 84,
+					["isToggle"] = false,
+				},
+				["ASE"] = {
+					["value"] = true,
+				},
+				["info3"] = {
+				},
+			},
+			["ASMP"] = {
+				["value"] = 30,
+			},
+			["ATSQ"] = {
+				["info2"] = {
+				},
+				["ASQ"] = {
+					["value"] = true,
+				},
+				["info1"] = {
+				},
+			},
+			["ASEb"] = {
+				["value"] = true,
+			},
+		},
+		["cb"] = {
+			["QCB"] = {
+				["value"] = true,
+			},
+			["ECB"] = {
+				["value"] = true,
+			},
+			["WCB"] = {
+				["value"] = true,
+			},
+		},
+		["hr"] = {
+			["HrQ"] = {
+				["value"] = true,
+			},
+		},
+		["lc"] = {
+			["LcQ"] = {
+				["value"] = true,
+			},
+			["checkMP"] = {
+				["value"] = 20,
+			},
+		},
+		["Miscset"] = {
+			["AntiSkill"] = {
+				["info4"] = {
+				},
+				["EbAnti"] = {
+					["value"] = true,
+				},
+			},
+			["KS"] = {
+				["KSEb"] = {
+					["value"] = true,
+				},
+				["IgniteKS"] = {
+					["value"] = true,
+				},
+				["QKS"] = {
+					["value"] = true,
+				},
+			},
+			["AutoLvlUp"] = {
+				["AutoSkillUp"] = {
+					["value"] = 1,
+				},
+				["UpSpellEb"] = {
+					["value"] = true,
+				},
+			},
+		},
+	},
+	["ILux"] = {
+		["Combo"] = {
+			["e1"] = {
+				["value"] = -0.75,
+			},
+			["Do"] = {
+				["value"] = true,
+			},
+			["DoR"] = {
+				["value"] = true,
+			},
+			["DoE"] = {
+				["value"] = true,
+			},
+			["DoW"] = {
+				["value"] = false,
+			},
+			["DoQ"] = {
+				["value"] = true,
+			},
+		},
+		["Draw"] = {
+			["DoD"] = {
+				["value"] = true,
+			},
+			["e1"] = {
+				["value"] = -0.75,
+			},
+			["Do"] = {
+				["value"] = true,
+			},
+			["DoR"] = {
+				["value"] = false,
+			},
+			["DoE"] = {
+				["value"] = true,
+			},
+			["DoW"] = {
+				["value"] = false,
+			},
+			["DoQ"] = {
+				["value"] = true,
+			},
+		},
+		["windup"] = {
+			["value"] = true,
+		},
+		["LastHit"] = {
+			["Do"] = {
+				["value"] = true,
+			},
+			["DoE"] = {
+				["value"] = false,
+			},
+			["e1"] = {
+				["value"] = -0.75,
+			},
+			["ManaE"] = {
+				["value"] = 50,
+			},
+		},
+		["Harass"] = {
+			["e3"] = {
+				["value"] = -0.75,
+			},
+			["e2"] = {
+				["value"] = -0.75,
+			},
+			["Do"] = {
+				["value"] = true,
+			},
+			["DoW"] = {
+				["value"] = false,
+			},
+			["DoQ"] = {
+				["value"] = true,
+			},
+			["ManaQ"] = {
+				["value"] = 35,
+			},
+			["ManaW"] = {
+				["value"] = 80,
+			},
+			["DoE"] = {
+				["value"] = true,
+			},
+			["ManaE"] = {
+				["value"] = 60,
+			},
+			["e1"] = {
+				["value"] = -0.75,
+			},
+		},
+		["Killsteal"] = {
+			["e2"] = {
+				["value"] = -0.75,
+			},
+			["e1"] = {
+				["value"] = -0.75,
+			},
+			["Do"] = {
+				["value"] = true,
+			},
+			["DoR"] = {
+				["value"] = true,
+			},
+			["DoE"] = {
+				["value"] = true,
+			},
+			["DoC"] = {
+				["value"] = true,
+			},
+			["DoQ"] = {
+				["value"] = true,
+			},
+		},
+		["OnImmobile"] = {
+			["value"] = true,
+		},
+		["DoE"] = {
+			["value"] = true,
+		},
+		["LaneClear"] = {
+			["DoE"] = {
+				["value"] = true,
+			},
+			["e2"] = {
+				["value"] = -0.75,
+			},
+			["Do"] = {
+				["value"] = true,
+			},
+			["ManaE"] = {
+				["value"] = 50,
+			},
+		},
+		["OnDash"] = {
+			["value"] = true,
+		},
+	},
+	["IOWKalista"] = {
+		["ts"] = {
+			["focus"] = false,
+			["mode"] = 1,
+		},
+		["drawcircle"] = {
+			["value"] = true,
+		},
+		["version"] = {
+		},
+		["circlequal"] = {
+			["value"] = 4,
+		},
+		["circlecol"] = {
+			["color"] = {
+				["a"] = 255,
+				["r"] = 255,
+				["g"] = 255,
+				["b"] = 255,
+			},
+		},
+		["lcm"] = {
+			["value"] = 1,
+		},
+		["h"] = {
+			["Combo"] = {
+				["key"] = 32,
+				["isToggle"] = false,
+			},
+			["Harass"] = {
+				["key"] = 67,
+				["isToggle"] = false,
+			},
+			["LastHit"] = {
+				["key"] = 88,
+				["isToggle"] = false,
+			},
+			["LaneClear"] = {
+				["key"] = 86,
+				["isToggle"] = false,
+			},
+		},
+		["space"] = {
+		},
+		["sticky"] = {
+			["value"] = false,
+		},
+		["Humanizer"] = {
+			["value"] = true,
+		},
+		["stop"] = {
+			["value"] = 65,
+		},
+	},
+	["Diana"] = {
 	},
 	["Perma_Show"] = {
 		["y"] = 400,
 		["x"] = 15,
+	},
+	["IOWAshe"] = {
+		["ts"] = {
+			["focus"] = false,
+			["mode"] = 1,
+		},
+		["drawcircle"] = {
+			["value"] = true,
+		},
+		["lcm"] = {
+			["value"] = 1,
+		},
+		["circlequal"] = {
+			["value"] = 4,
+		},
+		["circlecol"] = {
+			["color"] = {
+				["a"] = 255,
+				["r"] = 255,
+				["g"] = 255,
+				["b"] = 255,
+			},
+		},
+		["stop"] = {
+			["value"] = 65,
+		},
+		["h"] = {
+			["Combo"] = {
+				["key"] = 32,
+				["isToggle"] = false,
+			},
+			["Harass"] = {
+				["key"] = 67,
+				["isToggle"] = false,
+			},
+			["LastHit"] = {
+				["key"] = 88,
+				["isToggle"] = false,
+			},
+			["LaneClear"] = {
+				["key"] = 86,
+				["isToggle"] = false,
+			},
+		},
+		["space"] = {
+		},
+		["sticky"] = {
+			["value"] = false,
+		},
+		["Humanizer"] = {
+			["value"] = true,
+		},
+		["version"] = {
+		},
+	},
+	["IOWTristana"] = {
+		["ts"] = {
+			["mode"] = 1,
+			["focus"] = false,
+		},
+		["drawcircle"] = {
+			["value"] = true,
+		},
+		["lcm"] = {
+			["value"] = 2,
+		},
+		["circlequal"] = {
+			["value"] = 4,
+		},
+		["circlecol"] = {
+			["color"] = {
+				["a"] = 255,
+				["b"] = 255,
+				["g"] = 255,
+				["r"] = 255,
+			},
+		},
+		["stop"] = {
+			["value"] = 55,
+		},
+		["h"] = {
+			["LaneClear"] = {
+				["key"] = 86,
+				["isToggle"] = false,
+			},
+			["Harass"] = {
+				["key"] = 67,
+				["isToggle"] = false,
+			},
+			["LastHit"] = {
+				["key"] = 88,
+				["isToggle"] = false,
+			},
+			["Combo"] = {
+				["key"] = 32,
+				["isToggle"] = false,
+			},
+		},
+		["space"] = {
+		},
+		["sticky"] = {
+			["value"] = false,
+		},
+		["Humanizer"] = {
+			["value"] = true,
+		},
+		["version"] = {
+		},
+	},
+	["Ashe"] = {
+		["Harass"] = {
+			["Q"] = {
+				["value"] = true,
+			},
+			["WMana"] = {
+				["value"] = 50,
+			},
+			["Mana"] = {
+				["value"] = 30,
+			},
+			["W"] = {
+				["value"] = true,
+			},
+			["AutoW"] = {
+				["value"] = true,
+			},
+		},
+		["Killsteal"] = {
+			["W"] = {
+				["value"] = true,
+			},
+			["R"] = {
+				["value"] = false,
+			},
+		},
+		["Combo"] = {
+			["Q"] = {
+				["value"] = true,
+			},
+			["R"] = {
+				["value"] = true,
+			},
+			["W"] = {
+				["value"] = true,
+			},
+			["Items"] = {
+				["value"] = true,
+			},
+			["targetHP"] = {
+				["value"] = 20,
+			},
+			["QSS"] = {
+				["value"] = true,
+			},
+			["myHP"] = {
+				["value"] = 50,
+			},
+			["QSSHP"] = {
+				["value"] = 75,
+			},
+			["FireKey"] = {
+				["key"] = 84,
+				["isToggle"] = false,
+			},
+		},
+		["Drawings"] = {
+			["W"] = {
+				["value"] = true,
+			},
+			["color"] = {
+				["color"] = {
+					["a"] = 255,
+					["r"] = 255,
+					["g"] = 255,
+					["b"] = 0,
+				},
+			},
+		},
+		["JungleClear"] = {
+			["Q"] = {
+				["value"] = true,
+			},
+			["Mana"] = {
+				["value"] = 30,
+			},
+			["W"] = {
+				["value"] = true,
+			},
+		},
+		["LaneClear"] = {
+			["Q"] = {
+				["value"] = false,
+			},
+			["Mana"] = {
+				["value"] = 30,
+			},
+			["W"] = {
+				["value"] = false,
+			},
+		},
+		["Misc"] = {
+			["Autolvl"] = {
+				["value"] = true,
+			},
+			["Autolvltable"] = {
+				["value"] = 1,
+			},
+		},
+	},
+	["gapclose"] = {
+	},
+	["IOWDiana"] = {
+	},
+	["IOWLux"] = {
+		["ts"] = {
+			["mode"] = 1,
+			["focus"] = false,
+		},
+		["drawcircle"] = {
+			["value"] = true,
+		},
+		["stop"] = {
+			["value"] = 65,
+		},
+		["circlequal"] = {
+			["value"] = 4,
+		},
+		["circlecol"] = {
+			["color"] = {
+				["a"] = 255,
+				["b"] = 255,
+				["g"] = 255,
+				["r"] = 255,
+			},
+		},
+		["version"] = {
+		},
+		["Humanizer"] = {
+			["value"] = true,
+		},
+		["space"] = {
+		},
+		["sticky"] = {
+			["value"] = false,
+		},
+		["h"] = {
+			["LaneClear"] = {
+				["key"] = 86,
+				["isToggle"] = false,
+			},
+			["Harass"] = {
+				["key"] = 67,
+				["isToggle"] = false,
+			},
+			["LastHit"] = {
+				["key"] = 88,
+				["isToggle"] = false,
+			},
+			["Combo"] = {
+				["key"] = 32,
+				["isToggle"] = false,
+			},
+		},
+		["lcm"] = {
+			["value"] = 1,
+		},
+	},
+	["Ezreal"] = {
+	},
+	["IOWZilean"] = {
+		["ts"] = {
+			["mode"] = 1,
+			["focus"] = false,
+		},
+		["drawcircle"] = {
+			["value"] = true,
+		},
+		["version"] = {
+		},
+		["circlequal"] = {
+			["value"] = 4,
+		},
+		["circlecol"] = {
+			["color"] = {
+				["a"] = 255,
+				["b"] = 255,
+				["g"] = 255,
+				["r"] = 255,
+			},
+		},
+		["lcm"] = {
+			["value"] = 1,
+		},
+		["Humanizer"] = {
+			["value"] = true,
+		},
+		["space"] = {
+		},
+		["sticky"] = {
+			["value"] = false,
+		},
+		["h"] = {
+			["LaneClear"] = {
+				["key"] = 86,
+				["isToggle"] = false,
+			},
+			["Harass"] = {
+				["key"] = 67,
+				["isToggle"] = false,
+			},
+			["LastHit"] = {
+				["key"] = 88,
+				["isToggle"] = false,
+			},
+			["Combo"] = {
+				["key"] = 32,
+				["isToggle"] = false,
+			},
+		},
+		["stop"] = {
+			["value"] = 65,
+		},
+	},
+	["IOWKogMaw"] = {
+	},
+	["Menu_Base"] = {
+		["y"] = -5,
+		["x"] = 15,
+		["width"] = 150,
+	},
+	["Kalista"] = {
+		["Harass"] = {
+			["Q"] = {
+				["value"] = true,
+			},
+			["Mana"] = {
+				["value"] = 30,
+			},
+		},
+		["Killsteal"] = {
+			["Q"] = {
+				["value"] = true,
+			},
+			["E"] = {
+				["value"] = true,
+			},
+		},
+		["Combo"] = {
+			["Q"] = {
+				["value"] = true,
+			},
+			["E"] = {
+				["value"] = true,
+			},
+			["myHP"] = {
+				["value"] = 50,
+			},
+			["Items"] = {
+				["value"] = true,
+			},
+			["targetHP"] = {
+				["value"] = 20,
+			},
+			["QSS"] = {
+				["value"] = true,
+			},
+			["WallJump"] = {
+				["key"] = 71,
+				["isToggle"] = false,
+			},
+			["QSSHP"] = {
+				["value"] = 75,
+			},
+			["SentinelBug"] = {
+				["key"] = 84,
+				["isToggle"] = false,
+			},
+		},
+		["Ult"] = {
+			["AutoRHP"] = {
+				["value"] = 5,
+			},
+			["AutoR"] = {
+				["value"] = true,
+			},
+		},
+		["Drawings"] = {
+			["Q"] = {
+				["value"] = false,
+			},
+			["R"] = {
+				["value"] = false,
+			},
+			["E"] = {
+				["value"] = false,
+			},
+			["Edmg"] = {
+				["value"] = true,
+			},
+			["color"] = {
+				["color"] = {
+					["a"] = 255,
+					["r"] = 255,
+					["g"] = 255,
+					["b"] = 0,
+				},
+			},
+		},
+		["Farm"] = {
+			["Jungle"] = {
+				["je"] = {
+					["value"] = 3,
+				},
+				["firstmins"] = {
+					["value"] = true,
+				},
+			},
+			["Mana"] = {
+				["value"] = 25,
+			},
+			["ECanon"] = {
+				["value"] = true,
+			},
+			["LaneClear"] = {
+				["Farmkills"] = {
+					["value"] = 2,
+				},
+				["E"] = {
+					["value"] = true,
+				},
+			},
+		},
+		["Misc"] = {
+			["Edie"] = {
+				["value"] = true,
+			},
+			["E"] = {
+				["value"] = true,
+			},
+			["Autolvl"] = {
+				["value"] = true,
+			},
+			["minE"] = {
+				["value"] = 7,
+			},
+			["Mana"] = {
+				["value"] = 30,
+			},
+			["Elvl"] = {
+				["value"] = 12,
+			},
+			["Autolvltable"] = {
+				["value"] = 1,
+			},
+		},
+	},
+	["Interrupt"] = {
+	},
+	["IOWRyze"] = {
+		["ts"] = {
+			["focus"] = false,
+			["mode"] = 1,
+		},
+		["drawcircle"] = {
+			["value"] = true,
+		},
+		["stop"] = {
+			["value"] = 65,
+		},
+		["circlequal"] = {
+			["value"] = 4,
+		},
+		["circlecol"] = {
+			["color"] = {
+				["a"] = 255,
+				["r"] = 255,
+				["g"] = 255,
+				["b"] = 255,
+			},
+		},
+		["version"] = {
+		},
+		["h"] = {
+			["Combo"] = {
+				["key"] = 32,
+				["isToggle"] = false,
+			},
+			["Harass"] = {
+				["key"] = 67,
+				["isToggle"] = false,
+			},
+			["LastHit"] = {
+				["key"] = 88,
+				["isToggle"] = false,
+			},
+			["LaneClear"] = {
+				["key"] = 86,
+				["isToggle"] = false,
+			},
+		},
+		["space"] = {
+		},
+		["sticky"] = {
+			["value"] = false,
+		},
+		["Humanizer"] = {
+			["value"] = true,
+		},
+		["lcm"] = {
+			["value"] = 1,
+		},
+	},
+	["IOWLucian"] = {
+		["ts"] = {
+			["mode"] = 1,
+			["focus"] = false,
+		},
+		["drawcircle"] = {
+			["value"] = true,
+		},
+		["version"] = {
+		},
+		["circlequal"] = {
+			["value"] = 4,
+		},
+		["circlecol"] = {
+			["color"] = {
+				["a"] = 255,
+				["b"] = 255,
+				["g"] = 255,
+				["r"] = 255,
+			},
+		},
+		["lcm"] = {
+			["value"] = 1,
+		},
+		["Humanizer"] = {
+			["value"] = true,
+		},
+		["space"] = {
+		},
+		["sticky"] = {
+			["value"] = false,
+		},
+		["h"] = {
+			["LaneClear"] = {
+				["key"] = 86,
+				["isToggle"] = false,
+			},
+			["Harass"] = {
+				["key"] = 67,
+				["isToggle"] = false,
+			},
+			["LastHit"] = {
+				["key"] = 88,
+				["isToggle"] = false,
+			},
+			["Combo"] = {
+				["key"] = 32,
+				["isToggle"] = false,
+			},
+		},
+		["stop"] = {
+			["value"] = 65,
+		},
+	},
+	["IOWEzreal"] = {
 	},
 	["DarkTeam"] = {
 		["Misc"] = {
@@ -101,6 +979,53 @@ return {
 			},
 		},
 	},
+	["KogMaw"] = {
+	},
+	["Lucian"] = {
+		["Items"] = {
+			["useGhost"] = {
+				["value"] = true,
+			},
+			["useBork"] = {
+				["value"] = true,
+			},
+			["useRedPot"] = {
+				["value"] = true,
+			},
+			["useCut"] = {
+				["value"] = true,
+			},
+		},
+		["Drawings"] = {
+			["DrawQex"] = {
+				["value"] = true,
+			},
+			["Quality"] = {
+				["value"] = 239,
+			},
+			["DrawDMG"] = {
+				["value"] = true,
+			},
+		},
+		["Combo"] = {
+			["useQ"] = {
+				["value"] = true,
+			},
+			["useR"] = {
+				["value"] = true,
+			},
+			["Combo1"] = {
+				["key"] = 32,
+				["isToggle"] = false,
+			},
+			["useW"] = {
+				["value"] = true,
+			},
+			["useE"] = {
+				["value"] = true,
+			},
+		},
+	},
 	["MenuConfig"] = {
 		["Show"] = {
 			["value"] = false,
@@ -118,65 +1043,57 @@ return {
 		["Inf"] = {
 		},
 		["Width"] = {
-			["value"] = 2,
-		},
-	},
-	["IOWTristana"] = {
-	},
-	["Tristana"] = {
-	},
-	["IOWRyze"] = {
-		["ts"] = {
-			["focus"] = false,
-			["mode"] = 1,
-		},
-		["drawcircle"] = {
-			["value"] = true,
-		},
-		["lcm"] = {
 			["value"] = 1,
 		},
-		["circlequal"] = {
-			["value"] = 4,
-		},
-		["circlecol"] = {
-			["color"] = {
-				["a"] = 255,
-				["r"] = 255,
-				["g"] = 255,
-				["b"] = 255,
+	},
+	["Tristana"] = {
+		["Items"] = {
+			["useGhost"] = {
+				["value"] = true,
+			},
+			["useBork"] = {
+				["value"] = true,
+			},
+			["useRedPot"] = {
+				["value"] = true,
+			},
+			["useCut"] = {
+				["value"] = true,
 			},
 		},
-		["stop"] = {
-			["value"] = 65,
+		["Drawings"] = {
+			["drawR"] = {
+				["value"] = true,
+			},
 		},
-		["h"] = {
-			["Combo"] = {
+		["Killsteal"] = {
+			["ksR"] = {
+				["value"] = true,
+			},
+			["ERKS"] = {
+				["value"] = true,
+			},
+		},
+		["Combo"] = {
+			["Combo1"] = {
 				["key"] = 32,
 				["isToggle"] = false,
 			},
-			["Harass"] = {
-				["key"] = 67,
-				["isToggle"] = false,
+			["useQ"] = {
+				["value"] = true,
 			},
-			["LastHit"] = {
-				["key"] = 88,
-				["isToggle"] = false,
+			["useR"] = {
+				["value"] = true,
 			},
-			["LaneClear"] = {
-				["key"] = 86,
-				["isToggle"] = false,
+			["useE"] = {
+				["value"] = true,
 			},
 		},
-		["space"] = {
+	},
+	["nPredictionLux"] = {
+		["i1"] = {
 		},
-		["sticky"] = {
-			["value"] = false,
-		},
-		["Humanizer"] = {
-			["value"] = true,
-		},
-		["version"] = {
+		["i2"] = {
 		},
 	},
 }

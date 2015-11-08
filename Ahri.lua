@@ -92,7 +92,7 @@ OnTick(function(myHero)
     
     if IOW:Mode() == "Combo" then
 
-        if IsReady(_E) and ValidTarget(target,975) then
+        if IsReady(_E) and ValidTarget(target,975) and AhriMenu.Combo.E:Value() then
         Cast(_E,target)
         end
 	
@@ -149,9 +149,9 @@ OnTick(function(myHero)
           end
         end
                 
-	if IsReady(_W) and ValidTarget(enemy, 700) and AhriMenu.Killsteal.W:Value() and GetHP2(enemy) < getdmg("Q",enemy) then
+	if IsReady(_W) and ValidTarget(enemy, 700) and AhriMenu.Killsteal.W:Value() and GetHP2(enemy) < getdmg("W",enemy,myHero,3) then
 	CastSpell(_W)
-	elseif IsReady(_Q) and ValidTarget(enemy, 880) and AhriMenu.Killsteal.Q:Value() and GetHP2(enemy) < getdmg("W",enemy,myHero,3) then 
+	elseif IsReady(_Q) and ValidTarget(enemy, 880) and AhriMenu.Killsteal.Q:Value() and GetHP2(enemy) < getdmg("Q",enemy) then 
 	Cast(_Q,enemy)
 	elseif IsReady(_E) and ValidTarget(enemy, 975) and AhriMenu.Killsteal.E:Value() and GetHP2(enemy) < getdmg("E",enemy) then
 	Cast(_E,enemy)

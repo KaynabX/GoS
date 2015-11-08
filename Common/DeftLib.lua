@@ -7,7 +7,7 @@ SpellData = {
 	},
   ["Ahri"] = {
 		[_Q]  = { Name = "AhriOrbofDeception", ProjectileName = "Ahri_Orb_mis.troy", Range = 1000, Speed = 2500, Delay = 250, Width = 100, collision = false, aoe = false, type = "linear", IsDangerous = false},
- 	        --[_Q2] = { Name = "AhriOrbofDeceptionherpityderp", ProjectileName = "Ahri_Orb_mis_02.troy", Range = 1000, Speed = 900, Delay = 250, Width = 100, collision = false, aoe = false, type = "linear", IsDangerous = false},
+ 	        [-1]  = { Name = "AhriOrbofDeceptionherpityderp", ProjectileName = "Ahri_Orb_mis_02.troy", Range = 1000, Speed = 900, Delay = 250, Width = 100, collision = false, aoe = false, type = "linear", IsDangerous = false},
 		[_E]  = { Name = "AhriSeduce", ProjectileName = "Ahri_Charm_mis.troy", Range = 1000, Speed = 1550, Delay = 250,  Width = 60, collision = true, aoe = false, type = "linear", IsDangerous = true},
 	},
   ["Ashe"] = {
@@ -18,18 +18,22 @@ SpellData = {
         },
   ["Azir"] = {
 		[_Q] = { Name = "AzirQ", Range = 950,  Speed = 1600, Width = 80, collision = false, aoe = false, type = "linear", IsDangerous = false},
-		[_W] = { Name = "AzirW", Range = 850, Speed = math.huge, Width = 100, collision = false, aoe = false, type = "circular"},
+		[_W] = { Name = "AzirW", Range = 750, Speed = math.huge, Width = 100, collision = false, aoe = false, type = "circular"},
 		[_E] = { Name = "AzirE", Range = 1100, Speed = 1200, Delay = 250, Width = 60, collision = true, aoe = false, type = "linear", IsDangerous = false},
 		[_R] = { Name = "AzirR", Range = 520, Speed = 1300, Delay = 250, Width = 600, collision = false, aoe = true, type = "linear", IsDangerous = true}
 	},
   ["Blitzcrank"] = {
-		[_Q] = { Name = "RocketGrabMissile", ProjectileName = "FistGrab_mis.troy", Range = 975, Speed = 1800, Width = 70, Delay = 250, collision = true, aoe = false, type = "linear", IsDangerous = true},
+		[_Q] = { Name = "RocketGrabMissile", ProjectileName = "FistGrab_mis.troy", Range = 975, Speed = 1700, Width = 70, Delay = 250, collision = true, aoe = false, type = "linear", IsDangerous = true},
 		[_R] = { Name = "StaticField", Range = 0, Speed = math.huge, Width = 600, Delay = 250, collision = false, aoe = false, type = "circular", IsDangerous = false}
 	},
   ["Cassiopeia"] = {
 		[_Q] = { Name = "CassiopeiaNoxiousBlast", ProjectileName = "CassNoxiousSnakePlane_green.troy", Range = 850, Speed = math.huge, Delay = 750, Width = 100, collision = false, aoe = true, type = "circular", IsDangerous = false},
 		[_W] = { Name = "CassiopeiaMiasma", ProjectileName = "", Range = 925, Speed = 2500, Delay = 500, Width = 90, collision = false, aoe = true, type = "circular", IsDangerous = false},
 		[_R] = { Name = "CassiopeiaPetrifyingGaze",  ProjectileName = "", Range = 825, Speed = math.huge, Delay = 600, Width = 80, collision = false, aoe = true, type = "cone", IsDangerous = true}
+	},
+  ["Chogath"] = {
+		[_Q] = { Name = "", ProjectileName = "", Range = 950, Speed = math.huge, Delay = 600, Width = 250, collision = false, aoe = true, type = "circular", IsDangerous = true},
+		[_W] = { Name = "", ProjectileName = "", Range = 650, Speed = math.huge, Delay = 250, Width = 210, collision = false, aoe = false, type = "cone", IsDangerous = false}
 	},
   ["Ekko"] = { 
   	        [_Q] = { Name = "EkkoQ", ProjectileName = "Ekko_Base_Q_Aoe_Dilation.troy", Range = 925, Speed = 1050, Delay = 250, Width = 140, collision = false, aoe = false, type = "linear", IsDangerous = false},
@@ -42,6 +46,10 @@ SpellData = {
   ["Kalista"] = {
 		[_Q] = { Name = "KalistaMysticShot", ProjectileName = "", Range = 1150, Speed = 1700, Delay = 250, Width = 50, collision = true, aoe = false, type = "linear", IsDangerous = false}
 	},
+  ["Nidalee"] = {
+		[_Q] = { Name = "", ProjectileName = "", Range = 1450, Speed = 1337, Delay = 250, Width = 37.5, collision = true, aoe = false, type = "linear", IsDangerous = true},
+		[_W] = { Name = "", ProjectileName = "", Range = 900, Speed = math.huge, Delay = 1000, Width = 50, collision = false, aoe = false, type = "circular", IsDangerous = false}
+	},
   ["Orianna"] = {
                 [_Q] = { Name = "", ProjectileName = "", Range = 825, Speed = 1200, Delay = 0, Width = 80, collision = false, aoe = false, type = "circular", IsDangerous = false}
         },
@@ -53,26 +61,38 @@ SpellData = {
         },
   ["Syndra"] = {
   	        [_Q] = { Name = "SyndraQ", ProjectileName = "Syndra_Q_cas.troy", Range = 790, Speed = math.huge, Delay = 250, Width = 125, collision = false, aoe = false, type = "circular", IsDangerous = false},
-  	        [_W] = { Name = "SyndraW", ProjectileName = "", Range = 925, Speed = math.huge, Delay = 250, Width = 190, collision = false, aoe = false, type = "circular", IsDangerous = false}
+  	        [_W] = { Name = "SyndraW", ProjectileName = "", Range = 925, Speed = math.huge, Delay = 250, Width = 190, collision = false, aoe = false, type = "circular", IsDangerous = false},
+  	        [_E] = { Name = "SyndraE", ProjectileName = "", Range = 1250, Speed = 2500, Delay = 250, Width = 45, collision = false, aoe = false, type = "cone", IsDangerous = false}
+       },
+   ["Thresh"] = {
+  	        [_Q] = { Name = "", ProjectileName = "", Range = 1100, Speed = 1900, Delay = 500, Width = 70, collision = true, aoe = false, type = "linear", IsDangerous = true}
+       },
+   ["Viktor"] = {
+  	        [_W] = { Name = "", ProjectileName = "", Range = 700, Speed = math.huge, Delay = 500, Width = 300, collision = false, aoe = false, type = "circular", IsDangerous = false},
+  	        [_R] = { Name = "", ProjectileName = "", Range = 700, Speed = math.huge, Delay = 250, Width = 450, collision = false, aoe = false, type = "circular", IsDangerous = false}
        }
 }
 
 CHANELLING_SPELLS = {
     ["CaitlynAceintheHole"]         = {Name = "Caitlyn",      Spellslot = _R},
-    ["Drain"]                       = {Name = "FiddleSticks", Spellslot = _W},
     ["Crowstorm"]                   = {Name = "FiddleSticks", Spellslot = _R},
+    ["Drain"]                       = {Name = "FiddleSticks", Spellslot = _W},
     ["GalioIdolOfDurand"]           = {Name = "Galio",        Spellslot = _R},
-    ["FallenOne"]                   = {Name = "Karthus",      Spellslot = _R},
+    ["ReapTheWhirlwind"]            = {Name = "Janna",        Spellslot = _R},
+    ["KarthusFallenOne"]            = {Name = "Karthus",      Spellslot = _R},
     ["KatarinaR"]                   = {Name = "Katarina",     Spellslot = _R},
     ["LucianR"]                     = {Name = "Lucian",       Spellslot = _R},
     ["AlZaharNetherGrasp"]          = {Name = "Malzahar",     Spellslot = _R},
     ["MissFortuneBulletTime"]       = {Name = "MissFortune",  Spellslot = _R},
     ["AbsoluteZero"]                = {Name = "Nunu",         Spellslot = _R},                        
-    ["Pantheon_GrandSkyfall_Jump"]  = {Name = "Pantheon",     Spellslot = _R},
+    ["PantheonRJump"]               = {Name = "Pantheon",     Spellslot = _R},
     ["ShenStandUnited"]             = {Name = "Shen",         Spellslot = _R},
+    ["Destiny"]                     = {Name = "TwistedFate",  Spellslot = _R},
     ["UrgotSwap2"]                  = {Name = "Urgot",        Spellslot = _R},
     ["VarusQ"]                      = {Name = "Varus",        Spellslot = _Q},
-    ["InfiniteDuress"]              = {Name = "Warwick",      Spellslot = _R} 
+    ["InfiniteDuress"]              = {Name = "Warwick",      Spellslot = _R},
+    ["XerathLocusOfPower2"]         = {Name = "Xerath",       Spellslot = _R}
+    
 }
 
 GAPCLOSER_SPELLS = {
@@ -113,6 +133,65 @@ GAPCLOSER2_SPELLS = {
     ["slashCast"]                   = {Name = "Tryndamere", Range = 650,  ProjectileSpeed = 1450, Spellslot = _E}
 }
 
+DANGEROUS_SPELLS = {
+	["Akali"]      = {Spellslot = _R},
+	["Alistar"]    = {Spellslot = _W},
+	["Amumu"]      = {Spellslot = _R},
+	["Annie"]      = {Spellslot = _R},
+	["Ashe"]       = {Spellslot = _R},
+	["Akali"]      = {Spellslot = _R},
+	["Brand"]      = {Spellslot = _R},
+	["Braum"]      = {Spellslot = _R},
+	["Caitlyn"]    = {Spellslot = _R},
+	["Cassiopeia"] = {Spellslot = _R},
+	["Chogath"]    = {Spellslot = _R},
+	["Darius"]     = {Spellslot = _R},
+	["Diana"]      = {Spellslot = _R},
+	["Draven"]     = {Spellslot = _R},
+	["Ekko"]       = {Spellslot = _R},
+	["Evelynn"]    = {Spellslot = _R},
+	["Fiora"]      = {Spellslot = _R},
+	["Fizz"]       = {Spellslot = _R},
+	["Galio"]      = {Spellslot = _R},
+	["Garen"]      = {Spellslot = _R},
+	["Gnar"]       = {Spellslot = _R},
+	["Graves"]     = {Spellslot = _R},
+	["Hecarim"]    = {Spellslot = _R},
+	["JarvanIV"]   = {Spellslot = _R},
+	["Jinx"]       = {Spellslot = _R},
+	["Katarina"]   = {Spellslot = _R},
+	["Kennen"]     = {Spellslot = _R},
+	["LeBlanc"]    = {Spellslot = _R},
+	["LeeSin"]     = {Spellslot = _R},
+	["Leona"]      = {Spellslot = _R},
+	["Lissandra"]  = {Spellslot = _R},
+	["Lux"]        = {Spellslot = _R},
+	["Malphite"]   = {Spellslot = _R},
+	["Malzahar"]   = {Spellslot = _R},
+	["Morgana"]    = {Spellslot = _R},
+	["Nautilus"]   = {Spellslot = _R},
+	["Nocturne"]   = {Spellslot = _R},
+	["Orianna"]    = {Spellslot = _R},
+	["Rammus"]     = {Spellslot = _E},
+	["Riven"]      = {Spellslot = _R},
+	["Sejuani"]    = {Spellslot = _R},
+	["Shen"]       = {Spellslot = _E},
+	["Skarner"]    = {Spellslot = _R},
+	["Sona"]       = {Spellslot = _R},
+	["Syndra"]     = {Spellslot = _R},
+	["Tristana"]   = {Spellslot = _R},
+	["Urgot"]      = {Spellslot = _R},
+	["Varus"]      = {Spellslot = _R},
+	["Veigar"]     = {Spellslot = _R},
+	["Vi"]         = {Spellslot = _R},
+	["Viktor"]     = {Spellslot = _R},
+	["Warwick"]    = {Spellslot = _R},
+	["Yasuo"]      = {Spellslot = _R},
+	["Zed"]        = {Spellslot = _R},
+	["Ziggs"]      = {Spellslot = _R},
+	["Zyra"]       = {Spellslot = _R},
+}
+
 Dashes = {
     ["Vayne"]      = {Spellslot = _Q, Range = 300, Delay = 250},
     ["Riven"]      = {Spellslot = _E, Range = 325, Delay = 250},
@@ -132,12 +211,7 @@ Dashes = {
     ["Corki"]      = {Spellslot = _W, Range = 800, Delay = 250},
 }
 
-LudensStacks = 0
-mapID = GetMapID()
-
-function IsReady(spell)
-	return CanUseSpell(myHero,spell) == READY
-end
+local LudensStacks = 0
 
 function Cast(spell, target, origin, hitchance, speed, delay, range, width, coll)
       local hitchance = hitchance or 1
@@ -151,6 +225,20 @@ function Cast(spell, target, origin, hitchance, speed, delay, range, width, coll
       if Predicted.HitChance >= hitchance then
       CastSkillShot(spell, Predicted.PredPos)
       end
+end
+
+function GetPredictedPos(unit,delay,from)
+    if not ValidTarget(unit) then return end
+    local delay = delay or 125
+    local from = from or myHero
+    return GetPredictionForPlayer(GetOrigin(from),unit,GetMoveSpeed(unit),math.huge,delay,math.huge,1,false,false).PredPos
+end
+
+function IsFacing(target,range,unit) 
+    local range = range or 20000
+    local unit = unit or myHero
+    if GetDistance(unit,target) < range then return end
+    return GetDistance(GetPredictedPos(unit), target) < GetDistance(unit, target)
 end
 
 function mousePos()
@@ -242,28 +330,6 @@ function IsRecalling(unit)
    return (Recalling[GetNetworkID(unit)] or 0) > 0
 end
 
-function HaveManaForSpells(qMana, wMana, eMana, rMana, qCasts, wCasts, eCasts, rCasts)
-	local cost = 0
-        local qCasts = qCasts or 1
-        local wCasts = wCasts or 1
-        local eCasts = eCasts or 1
-        local rCasts = rCasts or 1
-
-	if qCasts > 0 then
-		cost = cost + (qMana * qCasts)
-	end
-	if wCasts > 0 then
-		cost = cost + (wMana * wCasts)
-	end
-	if eCasts > 0 then
-		cost = cost + (eMana * eCasts)
-	end
-	if rCasts > 0 then
-		cost = cost + (rMana * rCasts)
-	end
-	return (GetCurrentMana(myHero) >= cost)
-end
-
 function GetJLineFarmPosition(range, width)
     local BestPos 
     local BestHit = 0
@@ -298,91 +364,6 @@ function GetJFarmPosition(range, width)
   end
   return BestPos, BestHit
 end
-
---Credits to Maxxxel For IsFacing
-local lastattackposition={true,true,true}
-
-function IsFacing(targetFace,range,unit) 
-	range=range or 99999
-	unit=unit or myHero
-	targetFace=targetFace
-	if (targetFace and unit)~=nil and (ValidTarget(targetFace,range,unit)) and GetDistance(targetFace,unit)<=range then
-		local unitXYZ= GetOrigin(unit)
-		local targetFaceXYZ=GetOrigin(targetFace)
-		local lastwalkway={true,true,true}
-		local walkway = GetPredictionForPlayer(GetOrigin(unit),targetFace,GetMoveSpeed(targetFace),0,1000,2000,0,false,false)
-
-		if walkway.PredPos.x==targetFaceXYZ.x then
-
-		if lastwalkway.x~=nil then
-
-		local d1 = GetDistance(targetFace,unit)
-    		local d2 = GetDistance2XYZ(lastwalkway.x,lastwalkway.z,unitXYZ.x,unitXYZ.z)
-    		return d2 < d1
-
-
-    	elseif lastwalkway.x==nil then
-    		if lastattackposition.x~=nil and lastattackposition.name==GetObjectName(targetFace) then
-			local d1 = GetDistance(targetFace,unit)
-    			local d2 = GetDistance2XYZ(lastattackposition.x,lastattackposition.z,unitXYZ.x,unitXYZ.z)
-    			return d2 < d1
-    		end
-    	end
-    elseif walkway.PredPos.x~=targetFaceXYZ.x then
-    	lastwalkway={x=walkway.PredPos.x,y=walkway.PredPos.y,z=walkway.PredPos.z} 
-
-    	if lastwalkway.x~=nil then
-		local d1 = GetDistance(targetFace,unit)
-    		local d2 = GetDistance2XYZ(lastwalkway.x,lastwalkway.z,unitXYZ.x,unitXYZ.z)
-    		return d2 < d1
-    	end
-    end
-	end
-end
-
-function GetDistance2XYZ(x,z,x2,z2)
-	if (x and z and x2 and z2)~=nil then
-		a=x2-x
-		b=z2-z
-		if (a and b)~=nil then
-			a2=a*a
-			b2=b*b
-			if (a2 and b2)~=nil then
-				return math.sqrt(a2+b2)
-			else
-				return 99999
-			end
-		else
-			return 99999
-		end
-	end	
-end
-
-OnProcessSpellComplete(function(unit,spell)
-	if unit and spell and GetObjectType(unit) == Obj_AI_Hero then
-			for i,enemy in pairs(GetEnemyHeroes()) do
-				if ValidTarget(enemy,20000) then
-					local targetFaceXYZ=GetOrigin(enemy)
-					if (spell.name:find("Attack")) then 
-						if spell.startPos.x == targetFaceXYZ.x and spell.startPos.y == targetFaceXYZ.y and spell.startPos.z == targetFaceXYZ.z then 
-							if spell.endPos.x ~= targetFaceXYZ.x and spell.endPos.y ~= targetFaceXYZ.y and spell.endPos.z ~= targetFaceXYZ.z then 
-								lastattackposition = {x=spell.endPos.x,y=spell.endPos.y,z=spell.endPos.z,Name=GetObjectName(enemy)}
-								break
-							else
-								break
-							end
-						else
-							break
-						end
-					else
-						break
-					end
-				else
-					break
-		        	end
-                     end
-	end
-end)
 
 -- Credits To Inferno for MEC
 local SQRT = math.sqrt
